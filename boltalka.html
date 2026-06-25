@@ -1,0 +1,691 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Болталка</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Inter,system-ui,Arial,sans-serif;
+      background-image:url('images/fon.png');
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-attachment:fixed;
+      min-height:100vh;
+      color:#4a0e4e;
+      padding:18px;
+    }
+    .wrap{max-width:1100px;margin:0 auto}
+
+    .card{
+      background:rgba(255,255,255,.92);
+      border:2px solid #c724b1;
+      border-radius:12px;
+      box-shadow:3px 3px 0 #8b00a8;
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+    .head{
+      padding:8px 12px;
+      color:#fff;
+      background:linear-gradient(90deg,#c724b1,#ff6ec7);
+      font-weight:900;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .head a{
+      color:#fff;text-decoration:none;font-weight:900;
+      border:1px solid rgba(255,255,255,.7);
+      padding:6px 10px;border-radius:10px;
+      background:rgba(255,255,255,.2)
+    }
+    .body{padding:12px}
+
+    .layout{
+      display:grid;
+      grid-template-columns: 300px 1fr;
+      gap:12px;
+      align-items:start;
+    }
+    @media (max-width: 900px){
+      .layout{grid-template-columns:1fr}
+    }
+
+    .list{display:flex;flex-direction:column;gap:10px}
+
+    .chat-item{
+      background:rgba(255,255,255,.9);
+      border:1px solid #ffd1ef;
+      border-radius:12px;
+      padding:10px;
+      cursor:pointer;
+      transition:.12s;
+    }
+    .chat-item:hover{transform:translateY(-2px)}
+    .chat-item.active{border:2px solid #c724b1; box-shadow:2px 2px 0 #ff6ec7}
+    .chat-title{font-weight:900;color:#8b00a8}
+    .chat-sub{font-size:12px;opacity:.8;margin-top:3px}
+
+    .chatbox{
+      display:flex;
+      flex-direction:column;
+      min-height:560px;
+      background:rgba(255,255,255,.92);
+      border:1px solid #ffd1ef;
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .chatbox-top{
+      padding:10px 12px;
+      border-bottom:1px solid #ffd1ef;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      background:linear-gradient(180deg, rgba(255,110,199,.10), rgba(255,255,255,.0));
+    }
+    .chatbox-top .name{font-weight:900;color:#8b00a8}
+    .chatbox-top .meta{font-size:12px;opacity:.75}
+
+    .msgs{
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:auto;
+      height:440px;
+      scroll-behavior:smooth;
+      background:
+        radial-gradient(1200px 400px at 30% 0%, rgba(255,110,199,.10), transparent 55%),
+        radial-gradient(900px 400px at 70% 100%, rgba(199,36,177,.08), transparent 55%);
+    }
+
+    .msg{
+      max-width: 82%;
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid #ffd1ef;
+      background:#fff;
+      box-shadow:1px 1px 0 rgba(139,0,168,.18);
+      line-height:1.35;
+      white-space:pre-wrap;
+      position:relative;
+    }
+    .msg .who{
+      font-size:12px;
+      font-weight:900;
+      color:#8b00a8;
+      margin-bottom:4px;
+    }
+    .msg .time{font-size:11px;opacity:.65;margin-top:6px}
+    .msg.me{
+      margin-left:auto;
+      background:rgba(255,110,199,.13);
+      border-color:rgba(199,36,177,.35);
+    }
+    .msg.sys{
+      max-width:100%;
+      background:rgba(255,255,255,.7);
+      border-style:dashed;
+      opacity:.95;
+    }
+
+    .composer{
+      display:flex;
+      gap:8px;
+      padding:10px;
+      border-top:1px solid #ffd1ef;
+      background:rgba(255,255,255,.75);
+    }
+    textarea{
+      flex:1;
+      font:inherit;
+      outline:none;
+      border:2px solid #c724b1;
+      border-radius:10px;
+      padding:10px;
+      background:#fff;
+      color:#4a0e4e;
+      min-height:44px;
+      max-height:140px;
+      resize:vertical;
+    }
+    .btn{
+      cursor:pointer;
+      border:1px solid #fff;
+      background:rgba(139,0,168,.92);
+      color:#fff;
+      font-weight:900;
+      padding:10px 12px;
+      border-radius:10px;
+      box-shadow:2px 2px 0 #c724b1;
+      white-space:nowrap;
+      height:44px;
+      align-self:flex-end;
+    }
+    .btn.secondary{background:rgba(199,36,177,.88)}
+
+    .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .pill{
+      font-size:11px;
+      font-weight:900;
+      color:#fff;
+      background:rgba(139,0,168,.85);
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.8);
+    }
+    .hint{font-size:12px;opacity:.8;margin-top:8px}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <span>Болталка</span>
+        <a href="index.html">← на главную</a>
+      </div>
+
+      <div class="body">
+        <div class="layout">
+          <div class="list" id="chatList"></div>
+
+          <div class="chatbox">
+            <div class="chatbox-top">
+              <div>
+                <div class="name" id="chatName">—</div>
+                <div class="meta" id="chatMeta">—</div>
+              </div>
+              <div class="tools">
+                <span class="pill">эмуляция</span>
+                <button class="btn secondary" id="regenBtn" type="button">добавить сообщения</button>
+                <button class="btn secondary" id="clearBtn" type="button">очистить чат</button>
+              </div>
+            </div>
+
+            <div class="msgs" id="msgs"></div>
+
+            <div class="composer">
+              <textarea id="composerText" placeholder="Напишите сообщение… (Enter — отправить, Shift+Enter — перенос)"></textarea>
+              <button class="btn" id="sendBtn" type="button">отправить</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint">
+          Сообщения «одногруппников» формируются из сценариев и заготовок. Ваши сообщения сохраняются в браузере (localStorage).
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // =========================
+  // НАСТРОЙКИ ХРАНЕНИЯ
+  // =========================
+  const STORAGE_KEY = "mediacomm_chat_state_v2";
+  const STORAGE_ME_NAME = "mediacomm_me_name_v2";
+
+  const defaultMe = localStorage.getItem("userName") || "Вы";
+  if (!localStorage.getItem(STORAGE_ME_NAME)) localStorage.setItem(STORAGE_ME_NAME, defaultMe);
+  const ME = () => localStorage.getItem(STORAGE_ME_NAME) || "Вы";
+
+  // =========================
+  // УЧАСТНИКИ
+  // =========================
+  const personas = [
+    { name:"Лера",   emoji:"✂️", role:"монтаж" },
+    { name:"Даня",   emoji:"🎙️", role:"звук" },
+    { name:"Соня",   emoji:"📲", role:"SMM" },
+    { name:"Кирилл", emoji:"🎥", role:"камера" },
+    { name:"Аня",    emoji:"🎨", role:"дизайн" },
+    { name:"Илья",   emoji:"🧩", role:"продакшн" },
+    { name:"Катя",   emoji:"📝", role:"текст" },
+    { name:"Марат",  emoji:"🗂️", role:"организация" }
+  ];
+
+  // =========================
+  // ЧАТЫ
+  // =========================
+  const chatsSeed = [
+    {
+      id:"group",
+      title:"Медиакоммуникации • группа",
+      subtitle:"вопросы по парам, расписание, материалы",
+      members:["Лера","Даня","Соня","Кирилл","Аня","Илья","Катя","Марат"]
+    },
+    {
+      id:"project",
+      title:"Проект • видеоработа",
+      subtitle:"съёмка, раскадровка, монтаж, сдача",
+      members:["Кирилл","Лера","Илья","Аня","Катя"]
+    },
+    {
+      id:"podcast",
+      title:"Подкаст • выпуск",
+      subtitle:"темы, гости, запись, монтаж звука",
+      members:["Даня","Катя","Соня","Марат"]
+    },
+    {
+      id:"smm",
+      title:"SMM • публикации",
+      subtitle:"план постов, визуал, аналитика",
+      members:["Соня","Аня","Катя","Марат"]
+    }
+  ];
+
+  // =========================
+  // УТИЛИТЫ
+  // =========================
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  function uid(){
+    return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+  }
+  function pad2(n){ return String(n).padStart(2,"0"); }
+  function nowHHMM(){
+    const d = new Date();
+    return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+  }
+  function escapeHtml(str){
+    return (str || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;");
+  }
+  function trimOneLine(str, max){
+    const s = (str || "").replace(/\s+/g, " ").trim();
+    return s.length > max ? (s.slice(0, max-1) + "…") : s;
+  }
+  function personByName(name){
+    return personas.find(p => p.name === name) || { name, emoji:"💬", role:"" };
+  }
+
+  // =========================
+  // ШАБЛОНЫ (БЕЗ ПСЕВДО-СЛЕНГА)
+  // =========================
+  const pool = {
+    teacher:["Климова","Смирнов","Петрова","Никитин","Егорова","Соловьёв"],
+    task:["презентации","эссе","анализу кейса","питчу проекта","монтажу","сценарию","референсам"],
+    place:["у входа","в холле","у аудитории 214","в библиотеке","в кофейне рядом"],
+    time:["10:40","12:00","13:20","15:00","17:10","18:30"],
+    room:["214","302","105","410","118","220"],
+    format:["PDF","ссылкой на Figma","ссылкой на диск","презентацией (PPTX)"],
+    file:["шаблон титров","пример раскадровки","бриф","таблицу таймкодов","референсы по монтажу","шрифт с кириллицей"],
+  };
+
+  const templates = [
+    "{p}: подскажите, что нужно принести на следующую пару у {teacher}?",
+    "{p}: у кого есть материалы по {task}? можно ссылку?",
+    "{p}: напомните, в каком формате сдаём: {format}?",
+    "{p}: я правильно понимаю, что дедлайн по {task} сегодня до {time}?",
+    "{p}: кто может отправить {file}?",
+    "{p}: я буду на месте в {place} к {time}.",
+    "{p}: я сейчас в аудитории {room}. Если кто-то потерялся — напишите.",
+    "{p}: я собрал(а) всё в одну папку на диске. Ссылку сейчас отправлю.",
+    "{p}: проверьте, пожалуйста, что вам открывается файл/папка по ссылке.",
+    "{p}: по звуку есть вопрос: у кого-нибудь были проблемы с уровнем записи?",
+    "{p}: по видео: лучше снимать в 25fps или 50fps для этого задания?",
+    "{p}: если не сложно, посмотрите черновик и напишите замечания по структуре."
+  ];
+
+  // =========================
+  // СЦЕНЫ: КОРОТКИЕ ДИАЛОГИ
+  // =========================
+  function bot(chatId, memberName, text, time){
+    const person = personByName(memberName);
+    return {
+      id: uid(),
+      type: "bot",
+      who: `${person.emoji} ${person.name}`,
+      text,
+      time: time || nowHHMM()
+    };
+  }
+
+  function sys(text, time){
+    return {
+      id: uid(),
+      type: "sys",
+      who: "Системное сообщение",
+      text,
+      time: time || nowHHMM()
+    };
+  }
+
+  function buildScenesForChat(chatId){
+    if(chatId === "group"){
+      return [
+        [
+          sys("Пожалуйста, пишите по делу: вопрос → уточнение → ссылка/файл. Так проще ничего не потерять.", "09:00"),
+          bot(chatId,"Катя","Коллеги, напомните, в каком формате сдаём презентацию по кейсу?", "09:12"),
+          bot(chatId,"Марат","На последней паре говорили: PDF достаточно. Но лучше, чтобы шрифты были встроены.", "09:14"),
+          bot(chatId,"Аня","Да, и не забудьте титульный с темой и фамилиями.", "09:15")
+        ],
+        [
+          sys("Если кто-то не успевает — предупредите заранее и напишите, что именно будет готово.", "10:05"),
+          bot(chatId,"Кирилл","Кто сегодня берёт камеру? Я могу принести, но буду на месте только к 12:00.", "10:06"),
+          bot(chatId,"Илья","Я буду к 10:40. Если успеешь к 12:00, тогда снимем вторую часть позже.", "10:07"),
+          bot(chatId,"Лера","Главное — чтобы у нас был звук. Без него потом сложно.", "10:08")
+        ],
+        [
+          sys("Файлы подписываем: Фамилия_группа_дата. Это сильно экономит время.", "11:20"),
+          bot(chatId,"Соня","Кто может отправить конспект по прошлой паре? Мне нужно восстановить тему.", "11:21"),
+          bot(chatId,"Катя","Я сфотографировала страницы. Сейчас соберу в один PDF и отправлю.", "11:22"),
+          bot(chatId,"Соня","Спасибо, выручила.", "11:23")
+        ],
+      ];
+    }
+
+    if(chatId === "project"){
+      return [
+        [
+          sys("Проект: фиксируем решения в чате, чтобы не терялись правки.", "09:30"),
+          bot(chatId,"Илья","Предлагаю сегодня утвердить план кадров и список реквизита. Завтра — съёмка.", "09:32"),
+          bot(chatId,"Катя","По тексту: я отправлю вариант дикторского к вечеру. Нужны замечания по длине.", "09:34"),
+          bot(chatId,"Кирилл","Я могу сделать тест по свету в аудитории 214. Напишу, что там по условиям.", "09:35"),
+          bot(chatId,"Аня","Я подготовлю титры и плашки, чтобы потом не собирать в последний момент.", "09:36")
+        ],
+        [
+          bot(chatId,"Кирилл","По локации: в 214 шумно из коридора. Лучше закрывать дверь и поставить микрофон ближе.", "12:18"),
+          bot(chatId,"Даня","Если будет возможность, возьмите петличку. Так надёжнее.", "12:20"),
+          bot(chatId,"Лера","По монтажу: если снимаем перебивки, сделайте 5–7 секунд каждого кадра.", "12:22")
+        ]
+      ];
+    }
+
+    if(chatId === "podcast"){
+      return [
+        [
+          sys("Подкаст: после записи фиксируем таймкоды основных тем.", "10:10"),
+          bot(chatId,"Даня","Могу забронировать аудиторию под запись на 15:00. Всем подходит?", "10:12"),
+          bot(chatId,"Марат","Мне подходит. Я подготовлю список вопросов и примерный тайминг.", "10:13"),
+          bot(chatId,"Катя","Я тоже смогу. Только пришлите заранее темы, чтобы не импровизировать на месте.", "10:14"),
+          bot(chatId,"Соня","После записи я сделаю описание и пару вариантов заголовка.", "10:15")
+        ],
+        [
+          bot(chatId,"Даня","Проверьте, пожалуйста, что у вас есть наушники. Так легче контролировать шум.", "14:02"),
+          bot(chatId,"Катя","Ок. И давайте договоримся: говорим по очереди, чтобы потом не вырезать половину фраз.", "14:03")
+        ]
+      ];
+    }
+
+    // smm
+    return [
+      [
+        sys("SMM: сначала согласуем тему и визуал, потом публикуем. Без спешки.", "09:50"),
+        bot(chatId,"Соня","На эту неделю: один пост про проект + сторис со съёмки. Нужны фотографии в хорошем качестве.", "09:52"),
+        bot(chatId,"Кирилл","Съёмку могу снять на камеру и отдать исходники, если нужно.", "09:53"),
+        bot(chatId,"Аня","Я сделаю единый шаблон для сторис и обложек, чтобы всё выглядело одинаково.", "09:55"),
+        bot(chatId,"Катя","Я подготовлю тексты: короткий и расширенный вариант.", "09:56")
+      ],
+      [
+        bot(chatId,"Соня","Когда будет черновой монтаж, пришлите, пожалуйста, 10–15 секунд для анонса.", "13:40"),
+        bot(chatId,"Лера","Смогу вечером. Скину фрагмент без финального цвета, чтобы вы уже могли собрать сторис.", "13:41")
+      ]
+    ];
+  }
+
+  // =========================
+  // СОСТОЯНИЕ + ХРАНЕНИЕ
+  // =========================
+  function loadState(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); }
+    catch { return null; }
+  }
+  function saveState(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+
+  function initState(){
+    const existing = loadState();
+    if(existing) return existing;
+
+    const s = {
+      activeChatId: chatsSeed[0].id,
+      chats: Object.fromEntries(
+        chatsSeed.map(c => [c.id, {
+          id: c.id,
+          title: c.title,
+          subtitle: c.subtitle,
+          members: c.members,
+          messages: []
+        }])
+      )
+    };
+
+    for(const chat of Object.values(s.chats)){
+      const scenes = buildScenesForChat(chat.id);
+      const scene = pick(scenes);
+      for(const m of scene) chat.messages.push(m);
+
+      const extra = 10 + Math.floor(Math.random()*8); // 10–17
+      for(let i=0;i<extra;i++){
+        chat.messages.push(genBotMessage(s, chat.id));
+      }
+    }
+
+    saveState(s);
+    return s;
+  }
+
+  function genBotMessage(s, chatId){
+    const chat = s.chats[chatId];
+    const member = pick(chat.members);
+    const person = personByName(member);
+    const tpl = pick(templates);
+
+    const text = tpl
+      .replaceAll("{p}", `${person.emoji} ${person.name}`)
+      .replaceAll("{teacher}", pick(pool.teacher))
+      .replaceAll("{task}", pick(pool.task))
+      .replaceAll("{place}", pick(pool.place))
+      .replaceAll("{time}", pick(pool.time))
+      .replaceAll("{room}", pick(pool.room))
+      .replaceAll("{format}", pick(pool.format))
+      .replaceAll("{file}", pick(pool.file));
+
+    return { id: uid(), type:"bot", who:`${person.emoji} ${person.name}`, text, time: nowHHMM() };
+  }
+
+  function genBotBurst(s, chatId){
+    const count = 3 + Math.floor(Math.random()*4); // 3–6
+    const chat = s.chats[chatId];
+    const result = [];
+    let lastWho = null;
+
+    for(let i=0;i<count;i++){
+      // иногда — короткие уточнения, как в реальном чате
+      if(Math.random() < 0.25 && result.length > 0){
+        const short = pick([
+          "Понял(а).",
+          "Да, так.",
+          "Хорошо, спасибо.",
+          "Сейчас посмотрю.",
+          "Отправил(а) в папку.",
+          "Проверю и напишу."
+        ]);
+        const member = pick(chat.members);
+        const p = personByName(member);
+        const who = `${p.emoji} ${p.name}`;
+        if(who !== lastWho){
+          result.push({ id: uid(), type:"bot", who, text: short, time: nowHHMM() });
+          lastWho = who;
+          continue;
+        }
+      }
+
+      const m = genBotMessage(s, chatId);
+      if(m.who === lastWho){
+        // попробуем другой раз, чтобы не было дублей подряд
+        const m2 = genBotMessage(s, chatId);
+        result.push(m2);
+        lastWho = m2.who;
+      }else{
+        result.push(m);
+        lastWho = m.who;
+      }
+    }
+    return result;
+  }
+
+  // =========================
+  // UI
+  // =========================
+  const chatListEl = document.getElementById("chatList");
+  const chatNameEl = document.getElementById("chatName");
+  const chatMetaEl = document.getElementById("chatMeta");
+  const msgsEl = document.getElementById("msgs");
+  const composerEl = document.getElementById("composerText");
+
+  function renderChatList(){
+    chatListEl.innerHTML = "";
+    for(const c of Object.values(state.chats)){
+      const last = c.messages[c.messages.length - 1];
+      const preview = last ? `${last.who}: ${last.text}` : c.subtitle;
+
+      const div = document.createElement("div");
+      div.className = "chat-item" + (state.activeChatId === c.id ? " active" : "");
+      div.innerHTML = `
+        <div class="chat-title">${escapeHtml(c.title)}</div>
+        <div class="chat-sub">${escapeHtml(trimOneLine(preview, 72))}</div>
+      `;
+      div.addEventListener("click", () => {
+        state.activeChatId = c.id;
+        saveState(state);
+        renderAll();
+      });
+      chatListEl.appendChild(div);
+    }
+  }
+
+  function renderActiveChat(){
+    const c = state.chats[state.activeChatId];
+    chatNameEl.textContent = c.title;
+    chatMetaEl.textContent = `${c.members.length} участников • ${c.subtitle}`;
+
+    msgsEl.innerHTML = c.messages.map(m => {
+      const cls = ["msg"];
+      if(m.type === "me") cls.push("me");
+      if(m.type === "sys") cls.push("sys");
+
+      return `
+        <div class="${cls.join(" ")}">
+          <div class="who">${escapeHtml(m.who)}</div>
+          <div class="text">${escapeHtml(m.text)}</div>
+          <div class="time">${escapeHtml(m.time)}</div>
+        </div>
+      `;
+    }).join("");
+
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  }
+
+  function renderAll(){
+    renderChatList();
+    renderActiveChat();
+  }
+
+  // =========================
+  // ДЕЙСТВИЯ
+  // =========================
+  function sendMe(){
+    const text = composerEl.value.trim();
+    if(!text) return;
+
+    const c = state.chats[state.activeChatId];
+    c.messages.push({
+      id: uid(),
+      type:"me",
+      who: "✨ " + ME(),
+      text,
+      time: nowHHMM()
+    });
+
+    composerEl.value = "";
+    saveState(state);
+    renderAll();
+
+    // имитация "печатает..." + ответы с задержкой
+    const typingId = uid();
+    c.messages.push({
+      id: typingId,
+      type: "sys",
+      who: "Системное сообщение",
+      text: "Кто-то набирает сообщение…",
+      time: nowHHMM()
+    });
+    saveState(state);
+    renderAll();
+
+    setTimeout(() => {
+      const idx = c.messages.findIndex(m => m.id === typingId);
+      if(idx !== -1) c.messages.splice(idx, 1);
+
+      c.messages.push(...genBotBurst(state, state.activeChatId));
+      saveState(state);
+      renderAll();
+    }, 900 + Math.random()*1600);
+  }
+
+  function regen(){
+    const c = state.chats[state.activeChatId];
+    c.messages.push(...genBotBurst(state, state.activeChatId));
+    saveState(state);
+    renderAll();
+  }
+
+  function clearChat(){
+    if(!confirm("Очистить сообщения в этом чате?")) return;
+    const c = state.chats[state.activeChatId];
+    c.messages = [
+      sys("История чата очищена.", nowHHMM()),
+      sys("Вы можете продолжить переписку.", nowHHMM())
+    ];
+    saveState(state);
+    renderAll();
+  }
+
+  document.getElementById("sendBtn").addEventListener("click", sendMe);
+  document.getElementById("regenBtn").addEventListener("click", regen);
+  document.getElementById("clearBtn").addEventListener("click", clearChat);
+
+  composerEl.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      sendMe();
+    }
+  });
+
+  // =========================
+  // АВТОПОТОК (НЕ ЧАСТО, ЧТОБЫ НЕ СПАМИЛО)
+  // =========================
+  setInterval(() => {
+    if (Math.random() < 0.55) return;
+    const c = state.chats[state.activeChatId];
+
+    // не добавляем, если пользователь сейчас печатает длинный текст
+    if ((composerEl.value || "").trim().length > 25) return;
+
+    c.messages.push(...genBotBurst(state, state.activeChatId));
+    saveState(state);
+    renderAll();
+  }, 9000);
+
+  // =========================
+  // INIT
+  // =========================
+  let state = initState();
+  renderAll();
+</script>
+</body>
+</html>

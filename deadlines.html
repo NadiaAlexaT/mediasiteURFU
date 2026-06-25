@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Дедлайны ★</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    background-image:url('images/deadlines-bg.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    min-height:100vh;
+    color:#4a0e4e;
+    padding-bottom:50px;
+    overflow-x:hidden;
+  }
+
+  /* TOP BAR */
+  .top-bar{
+    background: linear-gradient(90deg, #8b00a8, #c724b1, #ff6ec7);
+    color:#fff; display:flex; justify-content:space-between; align-items:center;
+    padding:6px 14px; font-size:13px; font-weight:700; font-style:italic;
+    border-bottom:2px solid #fff;
+    position:relative; z-index:10;
+  }
+  .marquee-box{ flex:1; overflow:hidden; white-space:nowrap; }
+  .marquee-box span{
+    display:inline-block; padding-left:100%;
+    animation:scroll 18s linear infinite;
+  }
+  @keyframes scroll { to { transform: translateX(-100%); } }
+
+  .top-bar .login{ display:flex; gap:8px; align-items:center; margin-left:14px; }
+  .top-bar .login a{
+    color:#fff; text-decoration:none; background:rgba(255,255,255,.25);
+    padding:3px 10px; border-radius:8px; border:1px solid #fff;
+    font-size:12px; display:inline-flex; align-items:center; gap:6px;
+  }
+  .top-bar .login img{
+    height:24px; width:24px; border-radius:50%;
+    border:1px solid #fff; object-fit:cover;
+  }
+
+  /* NAV */
+  .nav{
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+    background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,200,240,.5));
+    padding:12px 14px;
+    border-bottom:2px solid #c724b1;
+    position:relative; z-index:10;
+  }
+  .nav-btn{
+    text-decoration:none;
+    display:inline-flex; flex-direction:column; align-items:center; gap:3px;
+    color:#8b00a8; font-weight:700; font-size:12px;
+    transition:.15s; white-space:nowrap;
+    padding:4px;
+    text-shadow:1px 1px 0 #fff;
+  }
+  .nav-btn img{ height:48px; display:block; transition:.15s; }
+  .nav-btn:hover{ transform: translateY(-3px); }
+  .nav-btn:active{ transform: translateY(1px); }
+
+  /* PAGE */
+  .page{
+    max-width:1100px;
+    margin:0 auto;
+    padding:18px 150px;
+    position:relative;
+    z-index:5;
+  }
+
+  .card{
+    background:#fff; border:2px solid #c724b1; border-radius:10px;
+    overflow:hidden; color:#4a0e4e;
+    box-shadow:3px 3px 0 #8b00a8;
+  }
+  .card .head{
+    background: linear-gradient(90deg,#c724b1,#ff6ec7);
+    color:#fff; font-weight:700; font-style:italic; font-size:13px;
+    padding:6px 10px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .card .head .win-btns span{
+    display:inline-block; width:16px; height:14px;
+    background:#fff; color:#8b00a8;
+    text-align:center; line-height:14px;
+    font-size:11px; border-radius:2px; margin-left:3px;
+  }
+
+  .card .body{ padding:12px; font-size:13px; line-height:1.55; }
+
+  .deadline-list{ list-style:none; }
+  .deadline-list li{
+    padding:10px 0;
+    border-bottom:1px dashed #ffb3e6;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .deadline-list li:last-child{ border-bottom:none; }
+
+  .task{ font-weight:700; }
+  .date{
+    font-weight:900;
+    color:#8b00a8;
+    white-space:nowrap;
+  }
+  .tag{
+    display:inline-block;
+    margin-top:4px;
+    font-size:11px;
+    font-weight:800;
+    color:#c724b1;
+  }
+
+  .actions{
+    margin-top:12px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .actions a{
+    color:#fff; text-decoration:none; background:rgba(139,0,168,.85);
+    padding:7px 10px; border-radius:8px; border:1px solid #fff;
+    font-size:12px; font-weight:700; font-style:italic;
+    box-shadow:2px 2px 0 #c724b1;
+  }
+
+  @media(max-width:900px){
+    .page{ padding:18px; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="top-bar">
+    <span style="margin-right:8px;">⏰ дедлайны:</span>
+    <div class="marquee-box">
+      <span>планируй заранее • сдавай вовремя • береги нервы</span>
+    </div>
+    <div class="login" id="topBarLogin"></div>
+  </div>
+
+  <div class="nav">
+    <a href="index.html" class="nav-btn">
+      <img src="images/home.png" alt="" onerror="this.style.display='none'">
+      home
+    </a>
+  </div>
+
+  <div class="page">
+    <div class="card">
+      <div class="head">
+        <span>⏰ Дедлайны.txt</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div>
+      </div>
+
+      <div class="body">
+        <ul class="deadline-list">
+          <li>
+            <div>
+              <div class="task">Зачёт физра</div>
+              <span class="tag">спорт</span>
+            </div>
+            <div class="date">1 июня</div>
+          </li>
+
+          <li>
+            <div>
+              <div class="task">Подкаст (звук. медиа)</div>
+              <span class="tag">медиа</span>
+            </div>
+            <div class="date">5 июня</div>
+          </li>
+
+          <li>
+            <div>
+              <div class="task">Сайт (медиадизайн)</div>
+              <span class="tag">дизайн / web</span>
+            </div>
+            <div class="date">6 июня</div>
+          </li>
+
+          <li>
+            <div>
+              <div class="task">Проект по ивенту</div>
+              <span class="tag">ивент</span>
+            </div>
+            <div class="date">10 июня</div>
+          </li>
+
+          <li>
+            <div>
+              <div class="task">Экзамен русский</div>
+              <span class="tag">экзамен</span>
+            </div>
+            <div class="date">15 июня</div>
+          </li>
+
+          <li>
+            <div>
+              <div class="task">Записаться на практику</div>
+              <span class="tag">документы</span>
+            </div>
+            <div class="date">1 июля</div>
+          </li>
+        </ul>
+
+        <div class="actions">
+          <a href="index.html">← на главную</a>
+          <a href="news.html">к новостям деканата →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function doLogout(){
+    localStorage.setItem('isLoggedIn', 'false');
+    updateTopBar();
+  }
+
+  function updateTopBar(){
+    const loginBlock = document.getElementById('topBarLogin');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if(!loginBlock) return;
+
+    if(isLoggedIn){
+      const name   = localStorage.getItem('userName') || 'профиль';
+      const avatar = localStorage.getItem('profile_avatar') || 'images/profile.png';
+
+      loginBlock.innerHTML = `
+        <a href="profile.html">
+          <img src="${avatar}" alt="" onerror="this.src='images/profile.png'">
+          <span>${name}</span>
+        </a>
+        <a href="#" onclick="doLogout();return false;">выйти</a>
+      `;
+    } else {
+      loginBlock.innerHTML = `
+        <a href="index.html">← на главную</a>
+      `;
+    }
+  }
+
+  updateTopBar();
+</script>
+</body>
+</html>

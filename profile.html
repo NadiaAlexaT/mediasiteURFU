@@ -1,0 +1,832 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>профиль ✨ mediacom</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Inter', sans-serif;
+  font-weight:500;
+  background-image: url('images/fon.png');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  min-height:100vh;
+  color:#4a0e4e;
+  padding-bottom:50px;
+  overflow-x:hidden;
+}
+
+/* ====== ВЕРХНЯЯ ЛЕНТА ====== */
+.top-bar {
+  background: linear-gradient(90deg, #8b00a8, #c724b1, #ff6ec7);
+  color:#fff; display:flex; justify-content:space-between; align-items:center;
+  padding:6px 14px; font-size:13px; font-weight:700; font-style:italic;
+  border-bottom:2px solid #fff;
+  position:relative; z-index:10;
+}
+.marquee-box { flex:1; overflow:hidden; white-space:nowrap; }
+.marquee-box span {
+  display:inline-block; padding-left:100%;
+  animation: scroll 18s linear infinite;
+}
+@keyframes scroll { to { transform: translateX(-100%); } }
+
+.top-bar .login {
+  display:flex; gap:8px; align-items:center; margin-left:14px;
+}
+.top-bar .login a {
+  color:#fff; text-decoration:none; background:rgba(255,255,255,.25);
+  padding:3px 10px; border-radius:8px; border:1px solid #fff;
+  font-size:12px;
+}
+.top-bar .login a:hover { background:rgba(255,255,255,.4); }
+
+/* ====== НАВИГАЦИЯ ====== */
+.nav {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,200,240,.5));
+  padding:12px 14px;
+  border-bottom:2px solid #c724b1;
+  position:relative; z-index:10;
+}
+.logo-urfu { height:42px; margin-right:14px; display:block; }
+.nav-btn {
+  text-decoration:none;
+  display:inline-flex; flex-direction:column; align-items:center; gap:3px;
+  color:#8b00a8; font-weight:700; font-size:12px;
+  transition:.15s; white-space:nowrap;
+  padding:4px;
+  text-shadow:1px 1px 0 #fff;
+}
+.nav-btn img { height:48px; display:block; transition:.15s; }
+.nav-btn:hover { transform: translateY(-3px); }
+.nav-btn.blue   { color:#2a6ec7; }
+.nav-btn.purple { color:#6a3ac7; }
+.nav-btn.green  { color:#3a9c2a; }
+
+/* ====== СТРАНИЦА ПРОФИЛЯ ====== */
+.profile-wrap {
+  max-width:1000px;
+  margin:30px auto;
+  padding:0 20px;
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:20px;
+}
+
+/* ====== ЛЕВАЯ КОЛОНКА — КАРТОЧКА ПРОФИЛЯ ====== */
+.profile-card {
+  background:#fff;
+  border:2px solid #c724b1;
+  border-radius:10px;
+  box-shadow:4px 4px 0 #8b00a8;
+  overflow:hidden;
+  height:fit-content;
+}
+.profile-card .card-head {
+  background:linear-gradient(90deg,#c724b1,#ff6ec7);
+  color:#fff; font-weight:700; font-style:italic;
+  font-size:13px; padding:6px 10px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.card-head .win-btns span {
+  display:inline-block; width:16px; height:14px;
+  background:#fff; color:#8b00a8;
+  text-align:center; line-height:14px;
+  font-size:11px; border-radius:2px; margin-left:3px;
+}
+.profile-card .card-body {
+  padding:16px; text-align:center;
+}
+
+/* аватар */
+.avatar-wrap {
+  position:relative; display:inline-block; margin-bottom:12px;
+}
+.avatar-wrap img#avatarPreview {
+  width:110px; height:110px; border-radius:50%;
+  border:3px solid #c724b1;
+  object-fit:cover;
+  box-shadow:3px 3px 0 #8b00a8;
+}
+.avatar-edit-btn {
+  position:absolute; bottom:4px; right:4px;
+  background:#c724b1; color:#fff;
+  border:none; border-radius:50%;
+  width:26px; height:26px; font-size:14px;
+  cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  box-shadow:1px 1px 0 #8b00a8;
+}
+.avatar-edit-btn:hover { background:#8b00a8; }
+#avatarFileInput { display:none; }
+
+/* инфо */
+.profile-name {
+  font-size:18px; font-weight:900; font-style:italic;
+  color:#8b00a8; margin-bottom:4px;
+}
+.profile-status {
+  font-size:12px; color:#c724b1; margin-bottom:10px;
+}
+.profile-badge {
+  display:inline-block; background:#ffe0f5;
+  border:1px solid #c724b1; border-radius:10px;
+  padding:2px 10px; font-size:11px; color:#8b00a8;
+  margin-bottom:10px;
+}
+
+/* инфо строки */
+.info-row {
+  display:flex; justify-content:space-between;
+  font-size:12px; padding:5px 0;
+  border-bottom:1px dashed #ffb3e6;
+  text-align:left;
+}
+.info-row span:first-child { color:#8b00a8; font-weight:700; }
+.info-row span:last-child  { color:#4a0e4e; }
+
+/* теги */
+.tags-wrap {
+  display:flex; flex-wrap:wrap; gap:4px;
+  justify-content:center; margin-top:10px;
+}
+.tag-badge {
+  background:#ffe0f5; border:1px solid #c724b1;
+  border-radius:10px; padding:2px 8px;
+  font-size:11px; color:#8b00a8;
+}
+
+/* ====== ПРАВАЯ КОЛОНКА — НАСТРОЙКИ ====== */
+.settings-col {
+  display:flex; flex-direction:column; gap:16px;
+}
+
+.settings-card {
+  background:#fff;
+  border:2px solid #c724b1;
+  border-radius:10px;
+  box-shadow:4px 4px 0 #8b00a8;
+  overflow:hidden;
+}
+.settings-card .card-head {
+  background:linear-gradient(90deg,#c724b1,#ff6ec7);
+  color:#fff; font-weight:700; font-style:italic;
+  font-size:13px; padding:6px 10px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.settings-card .card-body {
+  padding:16px;
+}
+
+/* поля */
+.field-label {
+  font-size:12px; font-weight:700; color:#8b00a8;
+  margin:10px 0 3px;
+}
+.field-label:first-child { margin-top:0; }
+.field-input {
+  width:100%; border:2px solid #e8b3e8;
+  border-radius:8px; padding:7px 10px;
+  font-family:'Inter',sans-serif; font-size:13px;
+  font-weight:500; color:#4a0e4e; outline:none;
+  transition:.15s;
+}
+.field-input:focus {
+  border-color:#c724b1;
+  box-shadow:0 0 0 3px rgba(199,36,177,.15);
+}
+.field-textarea {
+  width:100%; border:2px solid #e8b3e8;
+  border-radius:8px; padding:7px 10px;
+  font-family:'Inter',sans-serif; font-size:13px;
+  font-weight:500; color:#4a0e4e; outline:none;
+  resize:vertical; min-height:80px; transition:.15s;
+}
+.field-textarea:focus {
+  border-color:#c724b1;
+  box-shadow:0 0 0 3px rgba(199,36,177,.15);
+}
+.char-count {
+  font-size:11px; color:#c724b1;
+  text-align:right; margin-top:2px;
+}
+
+/* теги настройки */
+#tagsWrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.tag {
+  background:#ffe0f5; border:1px solid #c724b1;
+  border-radius:10px; padding:4px 10px;
+  font-size:12px; color:#8b00a8;
+  cursor:pointer; transition:.15s; user-select:none;
+}
+.tag:hover { background:#c724b1; color:#fff; }
+.tag.inactive { background:#f0f0f0; border-color:#ccc; color:#999; }
+
+/* приватность */
+.privacy-row {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 0; border-bottom:1px dashed #ffb3e6;
+}
+.toggle-wrap { position:relative; }
+.toggle-wrap input[type="checkbox"] { display:none; }
+.toggle-wrap label {
+  display:block; width:46px; height:24px;
+  background:#e8b3e8; border-radius:12px;
+  cursor:pointer; transition:.3s; position:relative;
+}
+.toggle-wrap label::after {
+  content:''; position:absolute;
+  top:3px; left:3px;
+  width:18px; height:18px;
+  background:#fff; border-radius:50%;
+  transition:.3s; box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.toggle-wrap input:checked + label { background:#c724b1; }
+.toggle-wrap input:checked + label::after { left:25px; }
+.privacy-text { font-size:12px; color:#4a0e4e; }
+.privacy-badge {
+  margin-left:auto; padding:2px 10px;
+  border-radius:10px; font-size:11px; font-weight:700;
+}
+.privacy-badge.open   { background:#d4f5d4; color:#2a7a2a; border:1px solid #2a7a2a; }
+.privacy-badge.closed { background:#ffe0f5; color:#8b00a8; border:1px solid #c724b1; }
+
+/* кнопки */
+.save-btn {
+  background:linear-gradient(90deg,#c724b1,#ff6ec7);
+  color:#fff; border:none; border-radius:8px;
+  padding:9px 20px; font-family:'Inter',sans-serif;
+  font-weight:900; font-style:italic; font-size:14px;
+  cursor:pointer; transition:.15s;
+  box-shadow:2px 2px 0 #8b00a8;
+  margin-top:12px; width:100%;
+}
+.save-btn:hover { transform:translate(-1px,-1px); box-shadow:3px 3px 0 #8b00a8; }
+.save-btn:active { transform:translate(1px,1px); box-shadow:1px 1px 0 #8b00a8; }
+
+/* уведомление */
+.save-success {
+  background:#d4f5d4; border:1px solid #2a7a2a;
+  border-radius:8px; padding:8px 12px;
+  font-size:13px; color:#2a7a2a;
+  margin-top:8px; font-weight:700;
+  display:none; text-align:center;
+}
+.save-error {
+  background:#ffe0f5; border:1px solid #c724b1;
+  border-radius:8px; padding:8px 12px;
+  font-size:13px; color:#8b00a8;
+  margin-top:8px; font-weight:700;
+  display:none; text-align:center;
+}
+
+/* пароль */
+.pass-msg {
+  border-radius:8px; padding:8px 12px;
+  font-size:12px; font-weight:700;
+  margin-top:8px; display:none;
+}
+
+/* ====== ТАСКБАР ====== */
+.taskbar {
+  position:fixed; bottom:0; left:0; right:0; height:36px;
+  background:linear-gradient(180deg,#c724b1,#8b00a8);
+  display:flex; align-items:center; padding:0 8px; gap:8px;
+  border-top:2px solid #fff; z-index:100;
+}
+.start-btn {
+  background:linear-gradient(180deg,#ff6ec7,#c724b1); color:#fff;
+  font-weight:900; padding:5px 14px; border-radius:6px;
+  border:1px solid #fff; cursor:pointer; font-style:italic;
+  font-family:'Inter',sans-serif;
+}
+.clock {
+  margin-left:auto; color:#fff; font-weight:700; font-size:13px;
+  background:rgba(0,0,0,.2); padding:4px 10px; border-radius:6px;
+}
+
+/* ====== АДАПТИВ ====== */
+@media(max-width:700px){
+  .profile-wrap {
+    grid-template-columns:1fr;
+    padding:0 10px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== ВЕРХНЯЯ ЛЕНТА ====== -->
+<div class="top-bar">
+  <span style="margin-right:8px;">✨ ФРАЗА ДНЯ:</span>
+  <div class="marquee-box"><span id="phrase">загрузка...</span></div>
+  <!-- шапка — заполняется JS -->
+  <div class="login" id="topBarLogin"></div>
+</div>
+
+<!-- ====== НАВИГАЦИЯ ====== -->
+<div class="nav">
+  <img src="images/urfu.png" class="logo-urfu" alt="УрФУ" onerror="this.style.display='none'">
+  <a href="index.html"     class="nav-btn"><img src="images/home.png"     alt="">home</a>
+  <a href="playlists.html" class="nav-btn blue"><img src="images/playlists.png" alt="">playlists</a>
+  <a href="lookbook.html"  class="nav-btn purple"><img src="images/lookbook.png" alt="">lookbook</a>
+  <a href="boltalka.html"  class="nav-btn green"><img src="images/chat.png"  alt="">болталка</a>
+  <a href="blog.html"      class="nav-btn"><img src="images/blog.png"     alt="">блог</a>
+  <a href="settings.html"  class="nav-btn blue"><img src="images/settings.png" alt="">настройки</a>
+</div>
+
+<!-- ====== ОСНОВНОЙ КОНТЕНТ ====== -->
+<div class="profile-wrap">
+
+  <!-- ====== ЛЕВАЯ КОЛОНКА ====== -->
+  <div>
+    <div class="profile-card">
+      <div class="card-head">
+        <span>👤 мой профиль</span>
+        <div class="win-btns">
+          <span>_</span><span>□</span><span>✕</span>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <!-- аватар -->
+        <div class="avatar-wrap">
+          <img id="avatarPreview" src="images/profile.png"
+            alt="аватар" onerror="this.src='images/profile.png'">
+          <button class="avatar-edit-btn"
+            onclick="document.getElementById('avatarFileInput').click()">✏</button>
+          <input type="file" id="avatarFileInput" accept="image/*">
+        </div>
+
+        <!-- имя и статус -->
+        <div class="profile-name"  id="infoName">имя не указано</div>
+        <div class="profile-status" id="statusPreview">✨ онлайн</div>
+        <div class="profile-badge" id="privacyBadge">🌸 открытый профиль</div>
+
+        <!-- инфо -->
+        <div class="info-row">
+          <span>👥 группа</span>
+          <span id="infoGroup">не указана</span>
+        </div>
+        <div class="info-row">
+          <span>💬 статус</span>
+          <span id="infoStatus">не указан</span>
+        </div>
+        <div class="info-row">
+          <span>📝 о себе</span>
+          <span id="infoAbout">не указано</span>
+        </div>
+
+        <!-- теги -->
+        <div class="tags-wrap" id="infoTags">
+          <span class="tag-badge">теги появятся тут</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== ПРАВАЯ КОЛОНКА ====== -->
+  <div class="settings-col">
+
+    <!-- РЕДАКТИРОВАТЬ ПРОФИЛЬ -->
+    <div class="settings-card">
+      <div class="card-head">
+        <span>✏ редактировать профиль</span>
+        <div class="win-btns">
+          <span>_</span><span>□</span><span>✕</span>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="field-label">👤 имя / ник</div>
+        <input type="text" id="fieldName" class="field-input"
+          placeholder="твоё имя или ник...">
+
+        <div class="field-label">👥 группа</div>
+        <input type="text" id="fieldGroup" class="field-input"
+          placeholder="например: МЖ-101...">
+
+        <div class="field-label">💬 статус</div>
+        <input type="text" id="fieldStatus" class="field-input"
+          placeholder="что у тебя сейчас...">
+
+        <div class="field-label">📝 о себе</div>
+        <textarea id="fieldAbout" class="field-textarea"
+          placeholder="расскажи о себе..." maxlength="300"
+          oninput="updateCharCount()"></textarea>
+        <div class="char-count" id="charCount">0 / 300 символов</div>
+
+        <!-- теги -->
+        <div class="field-label">🏷 мои теги</div>
+        <div id="tagsWrap">
+          <span class="tag" onclick="toggleTag(this)">🎵 музыка</span>
+          <span class="tag" onclick="toggleTag(this)">🎨 дизайн</span>
+          <span class="tag" onclick="toggleTag(this)">📸 фото</span>
+          <span class="tag" onclick="toggleTag(this)">✍ блог</span>
+          <span class="tag" onclick="toggleTag(this)">🎬 видео</span>
+          <span class="tag" onclick="toggleTag(this)">☕ кофе</span>
+          <span class="tag" onclick="toggleTag(this)">📚 книги</span>
+          <span class="tag" onclick="toggleTag(this)">🌸 аниме</span>
+          <span class="tag" onclick="toggleTag(this)">🎮 игры</span>
+          <span class="tag" onclick="toggleTag(this)">✈ путешествия</span>
+        </div>
+
+        <!-- приватность -->
+        <div class="field-label" style="margin-top:14px;">🔒 приватность</div>
+        <div class="privacy-row">
+          <div class="toggle-wrap">
+            <input type="checkbox" id="privacyToggle"
+              onchange="updatePrivacy()">
+            <label for="privacyToggle"></label>
+          </div>
+          <span class="privacy-text">закрытый профиль</span>
+          <span class="privacy-badge open" id="privBadge">открытый</span>
+        </div>
+
+        <!-- кнопка сохранить -->
+        <button class="save-btn" onclick="saveProfile()">
+          💾 сохранить профиль
+        </button>
+        <div class="save-success" id="saveSuccess">
+          ✅ профиль сохранён! 🌸
+        </div>
+        <div class="save-error" id="saveError">
+          ❌ заполни хотя бы имя!
+        </div>
+
+      </div>
+    </div>
+
+    <!-- СМЕНИТЬ ПАРОЛЬ -->
+    <div class="settings-card">
+      <div class="card-head">
+        <span>🔑 сменить пароль</span>
+        <div class="win-btns">
+          <span>_</span><span>□</span><span>✕</span>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="field-label">🔒 старый пароль</div>
+        <input type="password" id="oldPass" class="field-input"
+          placeholder="введи старый пароль...">
+
+        <div class="field-label">🔑 новый пароль</div>
+        <input type="password" id="newPass" class="field-input"
+          placeholder="новый пароль...">
+
+        <div class="field-label">🔑 повтори новый пароль</div>
+        <input type="password" id="newPass2" class="field-input"
+          placeholder="ещё раз новый пароль...">
+
+        <button class="save-btn" onclick="changePassword()">
+          🔑 сменить пароль
+        </button>
+        <div class="pass-msg" id="passMsg"></div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== ТАСКБАР ====== -->
+<div class="taskbar">
+  <button class="start-btn">★ start</button>
+  <div class="clock" id="clock">00:00</div>
+</div>
+
+<script>
+
+  // ====== ЧАСЫ ======
+  function tick(){
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const el = document.getElementById('clock');
+    if(el) el.textContent = h + ':' + m;
+  }
+  tick(); setInterval(tick, 30000);
+
+  // ====== ФРАЗА ДНЯ ======
+  const phrases = [
+    "ты сегодня сияешь ✨",
+    "сделай маленький шаг — и день станет лучше 🌷",
+    "не забудь попить воды 💧",
+    "ты справишься со всем 💪",
+    "будь как бабочка — лёгкой и красивой 🦋",
+    "сегодня твой день 🌸"
+  ];
+  const ph = document.getElementById('phrase');
+  if(ph) ph.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+
+  // ====== ОБНОВИТЬ ШАПКУ ======
+  function updateTopBar(){
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const loginBlock = document.getElementById('topBarLogin');
+
+    if(isLoggedIn){
+      const name   = localStorage.getItem('userName')       || 'профиль';
+      const avatar = localStorage.getItem('profile_avatar') || 'images/profile.png';
+      loginBlock.innerHTML = `
+        <a href="profile.html" style="
+          display:flex; align-items:center; gap:6px;
+          color:#fff; text-decoration:none;
+          background:rgba(255,255,255,.25);
+          padding:3px 10px; border-radius:8px;
+          border:1px solid #fff; font-size:12px;">
+          <img src="${avatar}"
+            style="height:24px;width:24px;border-radius:50%;
+                   border:1px solid #fff;object-fit:cover;"
+            onerror="this.src='images/profile.png'">
+          <span>${name}</span>
+        </a>
+        <a href="#" onclick="doLogout();return false;" style="
+          color:#fff; text-decoration:none;
+          background:rgba(255,255,255,.25);
+          padding:3px 10px; border-radius:8px;
+          border:1px solid #fff; font-size:12px;">
+          выйти
+        </a>
+      `;
+    } else {
+      loginBlock.innerHTML = `
+        <a href="index.html" style="
+          color:#fff; text-decoration:none;
+          background:rgba(255,255,255,.25);
+          padding:3px 10px; border-radius:8px;
+          border:1px solid #fff; font-size:12px;">
+          ВОЙТИ
+        </a>
+      `;
+    }
+  }
+
+  function doLogout(){
+    localStorage.setItem('isLoggedIn','false');
+    updateTopBar();
+    window.location.href = 'index.html';
+  }
+
+  // ====== ЗАГРУЗКА АВАТАРА ======
+  document.getElementById('avatarFileInput').addEventListener('change', function(){
+    const file = this.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const avatarData = e.target.result;
+      // показываем в превью
+      document.getElementById('avatarPreview').src = avatarData;
+      // сохраняем — index.html подхватит
+      localStorage.setItem('profile_avatar', avatarData);
+      // обновляем шапку сразу
+      updateTopBar();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ====== СЧЁТЧИК СИМВОЛОВ ======
+  function updateCharCount(){
+    const val = document.getElementById('fieldAbout').value;
+    document.getElementById('charCount').textContent =
+      val.length + ' / 300 символов';
+  }
+
+  // ====== ТЕГИ ======
+  function toggleTag(el){
+    el.classList.toggle('inactive');
+    updateTagsPreview();
+  }
+
+  function updateTagsPreview(){
+    const activeTags = [...document.querySelectorAll('#tagsWrap .tag:not(.inactive)')]
+      .map(t => t.textContent);
+    const infoTags = document.getElementById('infoTags');
+    if(activeTags.length === 0){
+      infoTags.innerHTML = '<span class="tag-badge">теги появятся тут</span>';
+    } else {
+      infoTags.innerHTML = activeTags
+        .map(t => `<span class="tag-badge">${t}</span>`)
+        .join('');
+    }
+  }
+
+  // ====== ПРИВАТНОСТЬ ======
+  function updatePrivacy(){
+    const isPrivate = document.getElementById('privacyToggle').checked;
+    const badge     = document.getElementById('privBadge');
+    const mainBadge = document.getElementById('privacyBadge');
+    if(isPrivate){
+      badge.textContent = 'закрытый';
+      badge.className   = 'privacy-badge closed';
+      mainBadge.textContent = '🔒 закрытый профиль';
+    } else {
+      badge.textContent = 'открытый';
+      badge.className   = 'privacy-badge open';
+      mainBadge.textContent = '🌸 открытый профиль';
+    }
+  }
+
+  // ====== СОХРАНИТЬ ПРОФИЛЬ ======
+  function saveProfile(){
+    const name   = document.getElementById('fieldName').value.trim();
+    const group  = document.getElementById('fieldGroup').value.trim();
+    const status = document.getElementById('fieldStatus').value.trim();
+    const about  = document.getElementById('fieldAbout').value.trim();
+    const priv   = document.getElementById('privacyToggle').checked;
+    const tags   = [...document.querySelectorAll('#tagsWrap .tag:not(.inactive)')]
+                     .map(t => t.textContent);
+
+    // проверка
+    if(!name){
+      const err = document.getElementById('saveError');
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 3000);
+      return;
+    }
+
+    // сохраняем в localStorage
+    const data = { name, group, status, about, private: priv, tags };
+    localStorage.setItem('profile_data', JSON.stringify(data));
+
+    // 👇 отдельно имя — чтобы index.html мог прочитать
+    localStorage.setItem('userName', name);
+
+    // обновляем левую колонку
+    document.getElementById('infoName').textContent    = name    || '—';
+    document.getElementById('infoGroup').textContent   = group   || '—';
+    document.getElementById('infoStatus').textContent  = status  || '—';
+    document.getElementById('infoAbout').textContent   = about   || '—';
+    document.getElementById('statusPreview').textContent = status || '✨ онлайн';
+
+    // обновляем теги в превью
+    updateTagsPreview();
+
+    // обновляем шапку
+    updateTopBar();
+
+    // уведомление
+    const ok = document.getElementById
+    ('saveSuccess');
+    ok.style.display = 'block';
+    setTimeout(() => ok.style.display = 'none', 3000);
+  }
+
+  // ====== СМЕНИТЬ ПАРОЛЬ ======
+  function changePassword(){
+    const oldPass  = document.getElementById('oldPass').value.trim();
+    const newPass  = document.getElementById('newPass').value.trim();
+    const newPass2 = document.getElementById('newPass2').value.trim();
+    const msg      = document.getElementById('passMsg');
+
+    // 👇 ПОМЕНЯЙ на свой текущий пароль!
+    const currentPass = localStorage.getItem('userPassword') || '1234';
+
+    if(!oldPass || !newPass || !newPass2){
+      msg.style.display = 'block';
+      msg.style.background = '#ffe0f5';
+      msg.style.border = '1px solid #c724b1';
+      msg.style.color = '#8b00a8';
+      msg.textContent = '❌ заполни все поля!';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      return;
+    }
+
+    if(oldPass !== currentPass){
+      msg.style.display = 'block';
+      msg.style.background = '#ffe0f5';
+      msg.style.border = '1px solid #c724b1';
+      msg.style.color = '#8b00a8';
+      msg.textContent = '❌ старый пароль неверный!';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      return;
+    }
+
+    if(newPass !== newPass2){
+      msg.style.display = 'block';
+      msg.style.background = '#ffe0f5';
+      msg.style.border = '1px solid #c724b1';
+      msg.style.color = '#8b00a8';
+      msg.textContent = '❌ новые пароли не совпадают!';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      return;
+    }
+
+    if(newPass.length < 4){
+      msg.style.display = 'block';
+      msg.style.background = '#ffe0f5';
+      msg.style.border = '1px solid #c724b1';
+      msg.style.color = '#8b00a8';
+      msg.textContent = '❌ пароль слишком короткий! минимум 4 символа';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      return;
+    }
+
+    // сохраняем новый пароль
+    localStorage.setItem('userPassword', newPass);
+
+    // очищаем поля
+    document.getElementById('oldPass').value  = '';
+    document.getElementById('newPass').value  = '';
+    document.getElementById('newPass2').value = '';
+
+    // уведомление
+    msg.style.display = 'block';
+    msg.style.background = '#d4f5d4';
+    msg.style.border = '1px solid #2a7a2a';
+    msg.style.color = '#2a7a2a';
+    msg.textContent = '✅ пароль успешно изменён! 🌸';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  }
+
+  // ====== ЗАГРУЗИТЬ СОХРАНЁННЫЕ ДАННЫЕ ======
+  function loadSavedData(){
+    // загружаем аватар
+    const savedAvatar = localStorage.getItem('profile_avatar');
+    if(savedAvatar){
+      document.getElementById('avatarPreview').src = savedAvatar;
+    }
+
+    // загружаем данные профиля
+    const savedData = localStorage.getItem('profile_data');
+    if(savedData){
+      const data = JSON.parse(savedData);
+
+      // заполняем поля
+      if(data.name)   document.getElementById('fieldName').value   = data.name;
+      if(data.group)  document.getElementById('fieldGroup').value  = data.group;
+      if(data.status) document.getElementById('fieldStatus').value = data.status;
+      if(data.about)  document.getElementById('fieldAbout').value  = data.about;
+
+      // обновляем счётчик символов
+      updateCharCount();
+
+      // приватность
+      document.getElementById('privacyToggle').checked = data.private || false;
+      updatePrivacy();
+
+      // теги
+      if(data.tags && data.tags.length > 0){
+        document.querySelectorAll('#tagsWrap .tag').forEach(tag => {
+          if(!data.tags.includes(tag.textContent)){
+            tag.classList.add('inactive');
+          }
+        });
+      }
+
+      // обновляем левую колонку
+      document.getElementById('infoName').textContent   = data.name   || 'имя не указано';
+      document.getElementById('infoGroup').textContent  = data.group  || 'не указана';
+      document.getElementById('infoStatus').textContent = data.status || 'не указан';
+      document.getElementById('infoAbout').textContent  = data.about  || 'не указано';
+      document.getElementById('statusPreview').textContent = data.status || '✨ онлайн';
+
+      // обновляем теги в превью
+      updateTagsPreview();
+    }
+  }
+
+  // ====== ЗАПУСК ======
+    function updateTopBar(){
+    const loginBlock = document.getElementById('topBarLogin');
+
+    // на странице профиля ВСЕГДА показываем кнопку "на главную"
+    loginBlock.innerHTML = `
+      <a href="index.html" style="
+        display:flex; align-items:center; gap:6px;
+        color:#fff; text-decoration:none;
+        background:rgba(255,255,255,.25);
+        padding:3px 10px; border-radius:8px;
+        border:1px solid #fff; font-size:12px;">
+        🏠 на главную
+      </a>
+      <a href="#" onclick="doLogout();return false;" style="
+        color:#fff; text-decoration:none;
+        background:rgba(255,255,255,.25);
+        padding:3px 10px; border-radius:8px;
+        border:1px solid #fff; font-size:12px;">
+        выйти
+      </a>
+    `;
+  }
+  loadSavedData();  // загружаем сохранённые данные
+
+  // закрыть по Escape
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') window.location.href = 'index.html';
+  });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Блог</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Inter,system-ui,Arial;
+      background-image:url('images/fon.png');
+      background-size:cover; background-position:center;
+      background-attachment:fixed;
+      min-height:100vh;
+      color:#4a0e4e;
+      padding:18px;
+    }
+    .wrap{max-width:980px;margin:0 auto}
+    .card{
+      background:rgba(255,255,255,.92);
+      border:2px solid #c724b1;
+      border-radius:12px;
+      box-shadow:3px 3px 0 #8b00a8;
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+    .head{
+      padding:8px 12px;
+      color:#fff;
+      background:linear-gradient(90deg,#c724b1,#ff6ec7);
+      font-weight:900;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .body{padding:12px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    input, textarea{
+      width:100%;
+      border:2px solid #c724b1;
+      border-radius:10px;
+      padding:10px;
+      font:inherit;
+      outline:none;
+      background:#fff;
+      color:#4a0e4e;
+    }
+    textarea{min-height:120px;resize:vertical}
+    input:focus, textarea:focus{box-shadow:0 0 0 3px rgba(199,36,177,.2)}
+    .btn{
+      cursor:pointer;
+      border:1px solid #fff;
+      background:rgba(139,0,168,.92);
+      color:#fff;
+      font-weight:900;
+      padding:8px 12px;
+      border-radius:10px;
+      box-shadow:2px 2px 0 #c724b1;
+    }
+    .btn.secondary{background:rgba(199,36,177,.88)}
+    .hint{font-size:12px;opacity:.85;margin-top:8px}
+    .post{
+      border:1px solid #ffd1ef;
+      border-radius:12px;
+      padding:12px;
+      background:rgba(255,255,255,.85);
+      margin-top:10px;
+    }
+    .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+    .title{font-weight:900;font-size:16px}
+    .author{font-weight:800;color:#8b00a8}
+    .date{font-size:12px;opacity:.75}
+    .content{margin-top:8px;white-space:pre-wrap;line-height:1.55}
+    .images{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:10px}
+    .images img{width:100%;height:160px;object-fit:cover;border-radius:10px;border:1px solid #ffd1ef;background:#fff}
+    .post-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .small{font-size:12px}
+    .top-actions{display:flex;gap:8px;flex-wrap:wrap}
+    a.link{color:#8b00a8;font-weight:900;text-decoration:none}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="card">
+      <div class="head">
+        <span>📰 Блог</span>
+        <div class="top-actions">
+          <a class="link" href="index.html">← на главную</a>
+        </div>
+      </div>
+      <div class="body">
+        <div class="row">
+          <div style="flex:1;min-width:220px">
+            <label class="small">Твой ник/имя</label>
+            <input id="author" placeholder="например: Админ / Маша" />
+          </div>
+          <div style="flex:1;min-width:220px">
+            <label class="small">Заголовок</label>
+            <input id="title" placeholder="что нового?" />
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label class="small">Текст</label>
+          <textarea id="content" placeholder="напиши новость/пост..."></textarea>
+        </div>
+
+        <div style="margin-top:10px" class="row">
+          <div style="flex:1;min-width:220px">
+            <label class="small">Картинки (можно несколько)</label>
+            <input id="images" type="file" accept="image/*" multiple />
+            <div class="hint">
+              Важно: картинки сохраняются прямо в браузере (как base64). Если выбрать много/большие — может переполниться хранилище.
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap">
+            <button class="btn" id="publishBtn" type="button">опубликовать</button>
+            <button class="btn secondary" id="clearFormBtn" type="button">очистить форму</button>
+          </div>
+        </div>
+
+       
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <span>Лента</span>
+        <div class="top-actions">
+          <button class="btn secondary" id="clearAllBtn" type="button">удалить все посты</button>
+        </div>
+      </div>
+      <div class="body" id="feed"></div>
+    </div>
+
+  </div>
+
+<script>
+  const STORAGE_KEY = "blog_posts_v1";
+  const authorEl = document.getElementById("author");
+  const titleEl = document.getElementById("title");
+  const contentEl = document.getElementById("content");
+  const imagesEl = document.getElementById("images");
+  const feedEl = document.getElementById("feed");
+
+  // Подхват имени из профиля, если у тебя уже есть userName
+  const profileName = localStorage.getItem("userName");
+  if (profileName && !localStorage.getItem("blog_author_v1")) {
+    localStorage.setItem("blog_author_v1", profileName);
+  }
+  authorEl.value = localStorage.getItem("blog_author_v1") || "";
+
+  authorEl.addEventListener("input", () => {
+    localStorage.setItem("blog_author_v1", authorEl.value);
+  });
+
+  function loadPosts(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function savePosts(posts){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  }
+  function formatDate(ts){
+    const d = new Date(ts);
+    return d.toLocaleString("ru-RU", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit" });
+  }
+
+  function escapeHtml(str){
+    return (str || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  }
+
+  function render(){
+    const posts = loadPosts().sort((a,b)=>b.createdAt-a.createdAt);
+
+    if(posts.length === 0){
+      feedEl.innerHTML = `<div class="hint">Пока пусто. Напиши первый пост сверху.</div>`;
+      return;
+    }
+
+    feedEl.innerHTML = posts.map(p => {
+      const imgs = (p.images || []).map(src => `<img src="${src}" alt="">`).join("");
+      return `
+        <div class="post" data-id="${p.id}">
+          <div class="meta">
+            <div class="title">${escapeHtml(p.title || "без названия")}</div>
+            <div class="author">• ${escapeHtml(p.author || "аноним")}</div>
+            <div class="date">• ${formatDate(p.createdAt)}</div>
+          </div>
+          <div class="content">${escapeHtml(p.content || "")}</div>
+          ${imgs ? `<div class="images">${imgs}</div>` : ""}
+          <div class="post-actions">
+            <button class="btn secondary" type="button" onclick="deletePost('${p.id}')">удалить</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function fileToDataURL(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function publish(){
+    const author = authorEl.value.trim() || "аноним";
+    const title = titleEl.value.trim();
+    const content = contentEl.value.trim();
+
+    if(!title && !content && (!imagesEl.files || imagesEl.files.length === 0)){
+      alert("Добавь хотя бы заголовок/текст/картинку 🙂");
+      return;
+    }
+
+    const files = Array.from(imagesEl.files || []);
+    // Ограничение на всякий случай
+    if(files.length > 8){
+      alert("Слишком много картинок. Выбери до 8.");
+      return;
+    }
+
+    const imageDataUrls = [];
+    for(const f of files){
+      // Можно ужать, но это уже отдельная логика; пока сохраняем как есть
+      const url = await fileToDataURL(f);
+      imageDataUrls.push(url);
+    }
+
+    const posts = loadPosts();
+    const newPost = {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+      author, title, content,
+      images: imageDataUrls,
+      createdAt: Date.now()
+    };
+
+    posts.push(newPost);
+    savePosts(posts);
+
+    // очистить форму
+    titleEl.value = "";
+    contentEl.value = "";
+    imagesEl.value = "";
+
+    render();
+  }
+
+  function clearForm(){
+    titleEl.value = "";
+    contentEl.value = "";
+    imagesEl.value = "";
+  }
+
+  function clearAll(){
+    if(!confirm("Удалить все посты?")) return;
+    localStorage.removeItem(STORAGE_KEY);
+    render();
+  }
+
+  window.deletePost = function(id){
+    if(!confirm("Удалить этот пост?")) return;
+    const posts = loadPosts().filter(p => p.id !== id);
+    savePosts(posts);
+    render();
+  }
+
+  document.getElementById("publishBtn").addEventListener("click", publish);
+  document.getElementById("clearFormBtn").addEventListener("click", clearForm);
+  document.getElementById("clearAllBtn").addEventListener("click", clearAll);
+
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,938 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mediacom 2000s ★</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-optical-sizing: auto;
+    background-image: url('images/fon.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height:100vh; color:#4a0e4e; padding-bottom:50px;
+    overflow-x:hidden;
+  }
+/* ====== МОДАЛЬНОЕ ОКНО ЛОГИНА ====== */
+#loginOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(139, 0, 168, 0.35);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn .2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.login-modal {
+  background: #fff;
+  border: 2px solid #c724b1;
+  border-radius: 10px;
+  box-shadow: 5px 5px 0 #8b00a8;
+  width: 320px;
+  overflow: hidden;
+  animation: popIn .25s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* шапка — точь-в-точь как .card .head */
+.login-head {
+  background: linear-gradient(90deg, #c724b1, #ff6ec7);
+  color: #fff;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 13px;
+  padding: 6px 10px;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.login-head .win-btns span {
+  display: inline-block;
+  width: 16px; height: 14px;
+  background: #fff; color: #8b00a8;
+  text-align: center; line-height: 14px;
+  font-size: 11px; border-radius: 2px;
+  margin-left: 3px;
+}
+
+/* тело */
+.login-body {
+  padding: 20px 18px 18px;
+  text-align: center;
+  position: relative;
+}
+
+.login-star {
+  width: 45px;
+  margin: 0 auto 8px;
+  display: block;
+}
+
+.login-title {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 18px;
+  color: #8b00a8;
+  margin-bottom: 2px;
+}
+
+.login-sub {
+  font-size: 11px;
+  color: #c724b1;
+  margin-bottom: 14px;
+}
+
+.login-label {
+  display: block;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a0e4e;
+  margin: 8px 0 3px;
+}
+
+.login-input {
+  width: 100%;
+  border: 2px solid #c724b1;
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a0e4e;
+  outline: none;
+  transition: .15s;
+  box-sizing: border-box;
+}
+.login-input:focus {
+  border-color: #8b00a8;
+  box-shadow: 0 0 0 3px rgba(199,36,177,.15);
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 14px;
+  background: linear-gradient(90deg, #c724b1, #ff6ec7);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .15s;
+  box-shadow: 2px 2px 0 #8b00a8;
+}
+.login-btn:hover {
+  transform: translate(-1px,-1px);
+  box-shadow: 3px 3px 0 #8b00a8;
+}
+.login-btn:active {
+  transform: translate(1px,1px);
+  box-shadow: 1px 1px 0 #8b00a8;
+}
+
+.login-error {
+  background: #ffe0f5;
+  border: 1px solid #c724b1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #8b00a8;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.login-forgot {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: #c724b1;
+  text-decoration: none;
+}
+.login-forgot:hover {
+  text-decoration: underline;
+}
+
+  /* ====== ДЕКОРАТИВНЫЕ ГИФКИ ПО УГЛАМ ====== */
+  .deco-corner {
+    position: fixed;
+    width: 120px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .deco-corner.top-left    { top: 60px;  left: 10px; }
+  .deco-corner.top-right   { top: 60px;  right: 10px; }
+  .deco-corner.bottom-left { bottom: 50px; left: 10px; width:100px;}
+  .deco-corner.bottom-right{ bottom: 50px; right: 10px; width:100px;}
+
+  .sparkle {
+    position: absolute;
+    width: 50px;
+    pointer-events: none;
+  }
+
+  /* ====== ВЕРХНЯЯ ЛЕНТА ====== */
+  .top-bar {
+    background: linear-gradient(90deg, #8b00a8, #c724b1, #ff6ec7);
+    color:#fff; display:flex; justify-content:space-between; align-items:center;
+    padding:6px 14px; font-size:13px; font-weight:700; font-style:italic;
+    border-bottom:2px solid #fff;
+    position:relative; z-index:10;
+  }
+  .marquee-box { flex:1; overflow:hidden; white-space:nowrap; }
+  .marquee-box span {
+    display:inline-block; padding-left:100%;
+    animation: scroll 18s linear infinite;
+  }
+  @keyframes scroll { to { transform: translateX(-100%); } }
+  .top-bar .login { display:flex; gap:8px; align-items:center; margin-left:14px;}
+  .top-bar .login a {
+    color:#fff; text-decoration:none; background:rgba(255,255,255,.25);
+    padding:3px 10px; border-radius:8px; border:1px solid #fff;
+  }
+  .top-bar .login .profile-pic {
+    height:24px; width:24px; border-radius:50%;
+    border:1px solid #fff; object-fit:cover; vertical-align:middle;
+  }
+
+  /* ====== НАВИГАЦИЯ ====== */
+  .nav {
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+    background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,200,240,.5));
+    padding:12px 14px;
+    border-bottom:2px solid #c724b1;
+    position:relative; z-index:10;
+  }
+  .logo-urfu {
+    height:42px; margin-right:14px; display:block;
+  }
+
+  /* ====== КНОПКИ НАВИГАЦИИ ====== */
+  .nav-btn {
+    text-decoration:none;
+    display:inline-flex; flex-direction:column; align-items:center; gap:3px;
+    color:#8b00a8; font-weight:700; font-size:12px;
+    transition:.15s;
+    white-space:nowrap;
+    background:none; border:none; box-shadow:none; padding:4px;
+    text-shadow:1px 1px 0 #fff;
+  }
+  .nav-btn img { height:48px; display:block; transition:.15s; }
+  .nav-btn:hover { transform: translateY(-3px); }
+  .nav-btn:hover img { transform: scale(1.08); }
+  .nav-btn:active { transform: translateY(1px); }
+  .nav-btn.blue   { color:#2a6ec7; }
+  .nav-btn.purple { color:#6a3ac7; }
+  .nav-btn.green  { color:#3a9c2a; }
+
+  .search {
+    margin-left:auto; display:flex; align-items:center; gap:4px;
+    background:#fff; border:2px solid #c724b1; border-radius:20px; padding:2px 6px;
+  }
+  .search input { border:none; outline:none; padding:4px; font-size:12px; font-family:'Inter',sans-serif;}
+  .search img { height:16px; display:block; cursor:pointer; }
+
+  /* ====== СЕТКА ====== */
+  .grid {
+    display:grid; gap:16px; padding:18px 150px;
+    max-width:1400px; margin:0 auto;
+    grid-template-columns: 1fr 1.4fr 1fr;
+    position:relative; z-index:5;
+  }
+
+  .card {
+    background:#fff; border:2px solid #c724b1; border-radius:10px;
+    overflow:hidden; text-decoration:none; color:#4a0e4e; display:block;
+    box-shadow:3px 3px 0 #8b00a8; transition:.2s;
+  }
+  .card:hover { transform:translate(-2px,-2px); box-shadow:5px 5px 0 #8b00a8; }
+  .card .head {
+    background: linear-gradient(90deg,#c724b1,#ff6ec7);
+    color:#fff; font-weight:700; font-style:italic; font-size:13px; padding:6px 10px;
+    font-family:'Inter', sans-serif;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .card .head .win-btns span {
+    display:inline-block; width:16px; height:14px; background:#fff; color:#8b00a8;
+    text-align:center; line-height:14px; font-size:11px; border-radius:2px; margin-left:3px;
+  }
+  .card .body { padding:12px; font-size:13px; line-height:1.5; }
+  .card .body ul { list-style:none; }
+  .card .body li { padding:3px 0; border-bottom:1px dashed #ffb3e6; }
+  .card .body li:before { content:"🌸 "; }
+
+  /* ====== HERO ====== */
+  .hero {
+    grid-column: 2; text-align:center; padding:30px 0; position:relative;
+  }
+  .hero-logo {
+    position: relative;
+    display: inline-block;
+    margin: 10px 0;
+  }
+  .logo-main {
+    width: 480px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(3px 3px 0 rgba(139,0,168,.4))
+            drop-shadow(0 0 20px rgba(255,110,199,.5));
+  }
+  .logo-sub {
+    width: 180px;
+    height: auto;
+    position: absolute;
+    bottom: -25px;
+    right: -20px;
+    filter: drop-shadow(2px 2px 0 rgba(139,0,168,.5));
+    transform: rotate(-8deg);
+  }
+  .hero-logo:hover { transform: scale(1.03); transition: .3s; }
+  .hero .sparkle.left  { top: 20px; left: -10px; }
+  .hero .sparkle.right { top: 20px; right: -10px; }
+
+  /* плеер */
+  .player .body { background:#1a001f; color:#0f8; }
+  .player audio { width:100%; margin-top:6px; }
+  .player button {
+    background:#c724b1; color:#fff; border:none; border-radius:6px;
+    padding:4px 8px; cursor:pointer; font-size:11px; margin:2px;
+    font-family:'Inter',sans-serif; font-weight:500;
+  }
+  .player .pl-btns { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+
+  .line-item { padding:4px 0; border-bottom:1px dashed #ffb3e6; }
+
+  .card input, .card textarea {
+    width:100%; border:1px solid #c724b1; border-radius:6px;
+    padding:5px; margin:3px 0; font-family:'Inter',sans-serif; font-size:12px; font-weight:500;
+  }
+  .card .btn {
+    background:linear-gradient(90deg,#c724b1,#ff6ec7); color:#fff;
+    border:none; border-radius:6px; padding:6px 14px; cursor:pointer;
+    font-weight:700; margin-top:4px; font-family:'Inter',sans-serif;
+  }
+
+  /* ====== БАБОЧКИ/ГИФКИ ====== */
+  .butterfly {
+    position:fixed; font-size:28px; pointer-events:none; z-index:4;
+    animation: fly 12s linear infinite;
+  }
+  .butterfly img { width:40px; }
+  @keyframes fly {
+    0%   { transform:translate(0,100vh) rotate(0); }
+    100% { transform:translate(80px,-50px) rotate(360deg); }
+  }
+
+  /* ====== ТАСКБАР ====== */
+  .taskbar {
+    position:fixed; bottom:0; left:0; right:0; height:36px;
+    background: linear-gradient(180deg,#c724b1,#8b00a8);
+    display:flex; align-items:center; padding:0 8px; gap:8px;
+    border-top:2px solid #fff; z-index:100;
+  }
+  .start-btn {
+    background:linear-gradient(180deg,#ff6ec7,#c724b1); color:#fff;
+    font-weight:900; padding:5px 14px; border-radius:6px;
+    border:1px solid #fff; cursor:pointer; font-style:italic;
+    font-family:'Inter', sans-serif;
+  }
+  .clock { margin-left:auto; color:#fff; font-weight:700; font-size:13px;
+    background:rgba(0,0,0,.2); padding:4px 10px; border-radius:6px; }
+
+  /* ====== МОДАЛЬНОЕ ОКНО ЛОГИНА ====== */
+  #loginOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(139, 0, 168, 0.35);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .login-modal {
+    background: #fff;
+    border: 2px solid #c724b1;
+    border-radius: 10px;
+    box-shadow: 5px 5px 0 #8b00a8;
+    width: 320px;
+    overflow: hidden;
+    animation: popIn .25s cubic-bezier(.34,1.56,.64,1);
+    position: relative;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .login-head {
+    background: linear-gradient(90deg, #c724b1, #ff6ec7);
+    color: #fff;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 13px;
+    padding: 6px 10px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .login-head .win-btns span {
+    display: inline-block;
+    width: 16px; height: 14px;
+    background: #fff; color: #8b00a8;
+    text-align: center; line-height: 14px;
+    font-size: 11px; border-radius: 2px;
+    margin-left: 3px;
+  }
+
+  .login-body {
+    padding: 20px 18px 18px;
+    text-align: center;
+    position: relative;
+  }
+
+  .login-star {
+    width: 45px;
+    margin: 0 auto 8px;
+    display: block;
+  }
+
+  .login-title {
+    font-weight: 900;
+    font-style: italic;
+    font-size: 18px;
+    color: #8b00a8;
+    margin-bottom: 2px;
+  }
+
+  .login-sub {
+    font-size: 11px;
+    color: #c724b1;
+    margin-bottom: 14px;
+  }
+
+  .login-label {
+    display: block;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4a0e4e;
+    margin: 8px 0 3px;
+  }
+
+  .login-input {
+    width: 100%;
+    border: 2px solid #c724b1;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4a0e4e;
+    outline: none;
+    transition: .15s;
+    box-sizing: border-box;
+  }
+  .login-input:focus {
+    border-color: #8b00a8;
+    box-shadow: 0 0 0 3px rgba(199,36,177,.15);
+  }
+
+  .login-btn {
+    width: 100%;
+    margin-top: 14px;
+    background: linear-gradient(90deg, #c724b1, #ff6ec7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .15s;
+    box-shadow: 2px 2px 0 #8b00a8;
+  }
+  .login-btn:hover {
+    transform: translate(-1px,-1px);
+    box-shadow: 3px 3px 0 #8b00a8;
+  }
+  .login-btn:active {
+    transform: translate(1px,1px);
+    box-shadow: 1px 1px 0 #8b00a8;
+  }
+
+  .login-error {
+    background: #ffe0f5;
+    border: 1px solid #c724b1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #8b00a8;
+    margin-top: 8px;
+    font-weight: 700;
+  }
+
+  .login-forgot {
+    display: block;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #c724b1;
+    text-decoration: none;
+  }
+  .login-forgot:hover { text-decoration: underline; }
+
+  /* ====== АДАПТИВ ====== */
+  @media(max-width:900px){
+    .grid{ grid-template-columns:1fr; padding:18px;}
+    .hero{grid-column:1;}
+    .logo-main { width: 280px; }
+    .logo-sub  { width: 110px; bottom: -15px; right: -10px; }
+    .deco-corner{ width:70px; }
+  }
+
+/* ====== ГИФКИ ПО БОКАМ ====== */
+.side-gif {
+  position: fixed;
+  width: 110px;
+  height: auto;
+  z-index: 6;
+  pointer-events: none;
+}
+.side-gif.left  { left: 8px; }
+.side-gif.right { right: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ====== ГИФКИ ПО БОКАМ ====== -->
+<img src="images/gifs/hearts.gif"       alt="" class="side-gif left"  style="top: 80px;">
+<img src="images/gifs/star.gif"      alt="" class="side-gif left"  style="top: 320px;">
+<img src="images/gifs/y2k-ipod.gif"       alt="" class="side-gif left"  style="top: 660px;">
+
+<img src="images/gifs/internet-webcore.gif" alt="" class="side-gif right" style="top: 80px;">
+<img src="images/gifs/star.gif"      alt="" class="side-gif right" style="top: 320px;">
+<img src="images/gifs/hearts.gif"       alt="" class="side-gif right"  style="top: 660px;">
+
+  <!-- ====== ВЕРХНЯЯ ЛЕНТА ====== -->
+  <div class="top-bar">
+    <span style="margin-right:8px;">✨ ФРАЗА ДНЯ:</span>
+    <div class="marquee-box"><span id="phrase">загрузка...</span></div>
+   <div class="login" id="topBarLogin">
+</div>
+  </div>
+
+  <!-- ====== НАВИГАЦИЯ ====== -->
+  <div class="nav">
+    <img src="images/urfu.png" class="logo-urfu" alt="УрФУ" onerror="this.style.display='none'">
+    <a href="index.html"     class="nav-btn"><img src="images/home.png" alt="">home</a>
+    <a href="playlists.html" class="nav-btn blue"><img src="images/playlists.png" alt="">playlists</a>
+    <a href="boltalka.html"  class="nav-btn green"><img src="images/chat.png" alt="">болталка</a>
+    <a href="blog.html"      class="nav-btn"><img src="images/blog.png" alt="">блог</a>
+    <a href="settings.html"  class="nav-btn blue"><img src="images/settings.png" alt="">настройки</a>
+    <div class="search">
+      <input type="text" placeholder="поиск...">
+      <img src="images/search.png" alt="поиск" onerror="this.style.display='none'">
+    </div>
+  </div>
+
+  <!-- ====== СЕТКА ====== -->
+  <div class="grid">
+
+    <!-- ДЕДЛАЙНЫ -->
+    <a href="deadlines.html" class="card">
+      <div class="head"><span>⏰ Дедлайны.txt</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body"><ul>
+        <li>Зачёт физра — <b>1 июня</b></li>
+        <li>Подкаст (звук. медиа) — <b>5 июня</b></li>
+        <li>Сайт (медиадизайн) — <b>6 июня</b></li>
+        <li>Проект по ивенту — <b>10 июня</b></li>
+        <li>Экзамен русский — <b>15 июня</b></li>
+        <li>Записаться на практику — <b>1 июля</b></li>
+      </ul></div>
+    </a>
+
+    <!-- ГЕРОЙ -->
+    <div class="hero">
+      <img src="images/sparkle.gif" class="sparkle left"  alt="" onerror="this.style.display='none'">
+      <img src="images/star.gif"    class="sparkle right" alt="" onerror="this.style.display='none'">
+      <div class="hero-logo">
+        <img src="images/logo.png"     alt="mediacom" class="logo-main">
+        <img src="images/logo2000.png" alt="2000s"    class="logo-sub">
+      </div>
+      <a href="map-urfu.html" class="card" style="margin-top:36px;">
+        <div class="head"><span>🗺 Карта УрФУ</span>
+          <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+        <div class="body">Где какой корпус? Кликни и узнай! 📍</div>
+      </a>
+    </div>
+
+    <!-- НОВОЕ СООБЩЕНИЕ -->
+    <a href="boltalka.html" class="card">
+      <div class="head"><span>✉ Новое сообщение</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body">💬 У тебя <b>3</b> новых сообщения в болталке!<br>
+        <small>от: Аня, препод, староста...</small></div>
+    </a>
+
+    <!-- ПЛЕЕР -->
+    <div class="card player">
+      <div class="head"><span>🎵 now playing</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body">
+        <div id="np">▶ выбери плейлист...</div>
+        <audio id="audioPlayer" controls></audio>
+        <div class="pl-btns">
+          <button onclick="loadPL('v-univer','🚶 В универ')">🚶 В универ</button>
+          <button onclick="loadPL('dz','📖 Дз')">📖 Дз</button>
+          <button onclick="loadPL('sessia','😩 Сессия')">😩 Сессия</button>
+          <button onclick="loadPL('sdal','🎉 Сдал!')">🎉 Сдал!</button>
+        </div>
+        <a href="playlists.html" style="color:#0ff; font-size:11px;">→ все плейлисты</a>
+      </div>
+    </div>
+
+    <!-- РАСПИСАНИЕ -->
+    <a href="schedule.html" class="card">
+      <div class="head"><span>📅 Расписание</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body"><ul>
+        <li>Звуковые медиа</li>
+        <li>Ивент-технологии</li>
+        <li>PR / Пиар</li>
+        <li>Медиадизайн</li>
+        <li>Русский язык</li>
+        <li>Литература</li>
+        <li>Физкультура</li>
+        <li>Статистика</li>
+      </ul></div>
+    </a>
+
+    <!-- НОВОСТИ ДЕКАНАТА -->
+    <a href="news.html" class="card">
+      <div class="head"><span>📢 Новости из деканата</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body"><ul>
+        <li>Прикрепить курсовые в личный кабинет</li>
+        <li>Зарегистрироваться на программу ДПО</li>
+        <li>Следить за баллами в БРС ⚠️</li>
+      </ul></div>
+    </a>
+
+    <!-- НА ПЕРЕРЫВ -->
+    <a href="break.html" class="card">
+      <div class="head"><span>☕ На перерыв</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body">
+        <div class="line-item">☕ Drinkit</div>
+        <div class="line-item">🥐 Жизнь Март</div>
+        <div class="line-item">☕ Кофе Брют</div>
+       
+      </div>
+    </a>
+
+    <!-- БЛОГ -->
+    <a href="blog.html" class="card">
+      <div class="head"><span>📝 Блог</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body"><ul>
+        <li>как я выжила на сессии 💀</li>
+        <li>топ-5 кафешек у универа ☕</li>
+        <li>что надеть на пару (lookbook) 👗</li>
+        <li>дневник медиастудентки</li>
+      </ul></div>
+    </a>
+
+    <!-- БОЛТАЛКА -->
+    <a href="boltalka.html" class="card">
+      <div class="head"><span>💬 Болталка</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div></div>
+      <div class="body">Общайся со своими ✨<br>
+        <small>чат + темы + мемы</small></div>
+    </a>
+
+  </div>
+
+  <!-- ====== ПАНЕЛЬ ЗАДАЧ ====== -->
+  <div class="taskbar">
+    <button class="start-btn">★ start</button>
+    <div class="clock" id="clock">00:00</div>
+  </div>
+
+  <!-- ====== МОДАЛЬНОЕ ОКНО ЛОГИНА ====== -->
+  <div id="loginOverlay" style="display:none;" onclick="closeLogin(event)">
+    <div class="login-modal" id="loginBox">
+
+      <div class="login-head">
+        <span>🔑 вход.exe</span>
+        <div class="win-btns">
+          <span>_</span>
+          <span>□</span>
+          <span onclick="closeLoginBtn()" style="cursor:pointer;">✕</span>
+        </div>
+      </div>
+
+      <div class="login-body">
+        <img src="images/star.gif" class="login-star" alt="" onerror="this.style.display='none'">
+        <p class="login-title">добро пожаловать ✨</p>
+        <p class="login-sub">войди чтобы продолжить</p>
+
+        <form onsubmit="doLogin(event)">
+          <label class="login-label">👤 логин</label>
+          <input
+            type="text"
+            id="loginInput"
+            class="login-input"
+            placeholder="твой логин..."
+            autocomplete="username"
+          >
+
+          <label class="login-label">🔒 пароль</label>
+          <input
+            type="password"
+            id="passInput"
+            class="login-input"
+            placeholder="твой пароль..."
+            autocomplete="current-password"
+          >
+
+          <div id="loginError" class="login-error" style="display:none;">
+            ❌ неверный логин или пароль!
+          </div>
+
+          <button type="submit" class="login-btn">ВОЙТИ ★</button>
+        </form>
+
+        <a href="#" class="login-forgot">забыла пароль? 🌷</a>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // ====== ЧАСЫ ======
+  function tick(){
+    const d = new Date();
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const el = document.getElementById('clock');
+    if (el) el.textContent = h + ':' + m;
+  }
+  tick(); setInterval(tick, 30000);
+
+  // ====== ФРАЗА ДНЯ ======
+  const phrases = [
+    "ты сегодня сияешь ✨",
+    "сделай маленький шаг — и день станет лучше 🌷",
+    "не забудь попить воды 💧",
+    "ты справишься со всем 💪",
+    "будь как бабочка — лёгкой и красивой 🦋",
+    "сегодня твой день 🌸"
+  ];
+  const ph = document.getElementById('phrase');
+  if (ph) ph.textContent = phrases[Math.floor(Math.random()*phrases.length)];
+
+  // ====== ГОРОСКОП ======
+  const horos = ["день удачи 🍀","осторожнее с дедлайнами ⚠️","встретишь старого друга 💌","купи себе кофе ☕","день для творчества 🎨"];
+  const ho = document.getElementById('horo');
+  if (ho) ho.textContent = horos[Math.floor(Math.random()*horos.length)];
+
+  // ====== ПЛЕЕР ======
+  const playlists = {
+    'v-univer': { name:'🚶 В универ', tracks:[
+      'music/v-univer/50Cent-PIMP.mp3',
+      'music/v-univer/DavidGuetta-SexyBitch.mp3',
+      'music/v-univer/LadyGaga-PockerFace.mp3',
+      'music/v-univer/Tom J-Sexbomb.mp3',
+      'music/v-univer/Нюша-Выбирать Чудо.mp3'
+    ]},
+    'dz': { name:'📖 Дз', tracks:[
+      'music/dz/5sta family-Я буду.mp3',
+      'music/dz/Dasha Suvorova-Опять не будет спать.mp3',
+      'music/dz/Thicc Aesth-STEREO LOVE.mp3',
+      'music/dz/Гости из будущего-Люби меня по-французски.mp3',
+      'music/dz/Земфира-Искала.mp3'
+    ]},
+    'sessia': { name:'😩 Сессия', tracks:[
+      'music/sessia/Eminem Dido-Stan.mp3',
+      'music/sessia/Linkin_Park-In The End.mp3',
+      'music/sessia/Nickelback -How You Remind Me.mp3',
+      'music/sessia/tATu-Я сошла с ума.mp3',
+      'music/sessia/Пропаганда-Мелом.mp3'
+    ]},
+    'sdal': { name:'🎉 Сдал!', tracks:[
+      'music/sdal/Benny Benassi-Satisfaction.mp3',
+      'music/sdal/Mika-Relax Take It Easy.mp3',
+      'music/sdal/Stromae-Alors On Dance.mp3',
+      'music/sdal/tATu-Нас не догонят.mp3',
+      'music/sdal/Жанна Фриске - Ла Ла Ла.mp3'
+    ]}
+  };
+
+  let currentTracks = [];
+  let currentIndex = 0;
+  const audio = document.getElementById('audioPlayer');
+  const npLabel = document.getElementById('np');
+
+  function loadPL(key, label){
+    const pl = playlists[key];
+    if(!pl){ return; }
+    currentTracks = pl.tracks;
+    currentIndex = 0;
+    playCurrent(pl.name);
+  }
+
+  function playCurrent(plName){
+    if(!currentTracks.length) return;
+    audio.src = currentTracks[currentIndex];
+    audio.play().catch(()=>{});
+    const fileName = currentTracks[currentIndex].split('/').pop();
+    npLabel.textContent = '▶ ' + (plName || '') + ' — ' + fileName;
+  }
+
+  if(audio){
+    audio.addEventListener('ended', ()=>{
+      currentIndex++;
+      if(currentIndex >= currentTracks.length) currentIndex = 0;
+      playCurrent('');
+    });
+  }
+// ====== МОДАЛЬНОЕ ОКНО ЛОГИНА ======
+function openLogin() {
+  document.getElementById('loginOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('loginInput').focus(), 100);
+}
+
+function closeLoginBtn() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+function closeLogin(e) {
+  if(e.target.id === 'loginOverlay') closeLoginBtn();
+}
+
+function doLogin(e) {
+  e.preventDefault();
+  const login = document.getElementById('loginInput').value.trim();
+  const pass  = document.getElementById('passInput').value.trim();
+  const err   = document.getElementById('loginError');
+
+  // 👇 ПОМЕНЯЙ на свои данные!
+  if(login === 'admin' && pass === '1234') {
+
+    // сохраняем что пользователь вошёл
+    localStorage.setItem('isLoggedIn', 'true');
+
+    // сохраняем имя если ещё не было
+    if(!localStorage.getItem('userName')){
+      localStorage.setItem('userName', login);
+    }
+
+    closeLoginBtn();
+    updateTopBar(); // обновляем шапку сразу
+
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+// ====== ВЫХОД ======
+function doLogout() {
+  localStorage.setItem('isLoggedIn', 'false');
+  updateTopBar();
+}
+
+// ====== ОБНОВИТЬ ШАПКУ ======
+  function updateTopBar(){
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const loginBlock = document.getElementById('topBarLogin');
+
+    if(isLoggedIn){
+      // берём данные из localStorage
+      const name   = localStorage.getItem('userName')       || 'профиль';
+      const avatar = localStorage.getItem('profile_avatar') || 'images/profile.png';
+
+      // показываем аватарку + ник — кнопка ВОЙТИ пропадает
+      loginBlock.innerHTML = `
+        <a href="profile.html" style="
+          display:flex; align-items:center; gap:6px;
+          color:#fff; text-decoration:none;
+          background:rgba(255,255,255,.25);
+          padding:3px 10px; border-radius:8px;
+          border:1px solid #fff; font-size:12px;">
+          <img
+            src="${avatar}"
+            style="height:24px; width:24px; border-radius:50%;
+                   border:1px solid #fff; object-fit:cover;"
+            onerror="this.src='images/profile.png'"
+          >
+          <span>${name}</span>
+        </a>
+        <a href="#" onclick="doLogout();return false;" style="
+          color:#fff; text-decoration:none;
+          background:rgba(255,255,255,.25);
+          padding:3px 10px; border-radius:8px;
+          border:1px solid #fff; font-size:12px;">
+          выйти
+        </a>
+      `;
+
+    } else {
+      // НЕ вошла — показываем только кнопку ВОЙТИ
+      loginBlock.innerHTML = `
+        <a href="#" onclick="openLogin();return false;" style="
+          color:#fff; text-decoration:none;
+          background:rgba(255,255,255,.25);
+          padding:3px 10px; border-radius:8px;
+          border:1px solid #fff; font-size:12px;">
+          ВОЙТИ ★
+        </a>
+      `;
+    }
+  }
+updateTopBar();
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Расписание ★</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,700;0,900;1,900&display=swap" rel="stylesheet">
+
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    background-image:url('images/fon.png');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    min-height:100vh;
+    color:#4a0e4e;
+    padding-bottom:50px;
+    overflow-x:hidden;
+  }
+
+  .top-bar{
+    background: linear-gradient(90deg, #8b00a8, #c724b1, #ff6ec7);
+    color:#fff; display:flex; justify-content:space-between; align-items:center;
+    padding:6px 14px; font-size:13px; font-weight:700; font-style:italic;
+    border-bottom:2px solid #fff;
+    position:relative; z-index:10;
+    gap:10px;
+  }
+  .marquee-box{ flex:1; overflow:hidden; white-space:nowrap; }
+  .marquee-box span{ display:inline-block; padding-left:100%; animation:scroll 18s linear infinite; }
+  @keyframes scroll { to { transform: translateX(-100%); } }
+
+  .top-bar .login{ display:flex; gap:8px; align-items:center; margin-left:14px; }
+  .top-bar .login a{
+    color:#fff; text-decoration:none; background:rgba(255,255,255,.25);
+    padding:3px 10px; border-radius:8px; border:1px solid #fff;
+    font-size:12px; display:inline-flex; align-items:center; gap:6px;
+  }
+  .top-bar .login img{ height:24px; width:24px; border-radius:50%; border:1px solid #fff; object-fit:cover; }
+
+  .nav{
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+    background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,200,240,.5));
+    padding:12px 14px;
+    border-bottom:2px solid #c724b1;
+    position:relative; z-index:10;
+  }
+  .nav-btn{
+    text-decoration:none;
+    display:inline-flex; flex-direction:column; align-items:center; gap:3px;
+    color:#8b00a8; font-weight:700; font-size:12px;
+    transition:.15s; white-space:nowrap;
+    padding:4px;
+    text-shadow:1px 1px 0 #fff;
+  }
+  .nav-btn img{ height:48px; display:block; transition:.15s; }
+  .nav-btn:hover{ transform: translateY(-3px); }
+  .nav-btn:active{ transform: translateY(1px); }
+
+  .page{ max-width:1100px; margin:0 auto; padding:18px 150px; position:relative; z-index:5; }
+  @media(max-width:900px){ .page{ padding:18px; } }
+
+  .card{
+    background:#fff; border:2px solid #c724b1; border-radius:10px;
+    overflow:hidden; color:#4a0e4e;
+    box-shadow:3px 3px 0 #8b00a8;
+    margin-bottom:14px;
+  }
+  .card .head{
+    background: linear-gradient(90deg,#c724b1,#ff6ec7);
+    color:#fff; font-weight:700; font-style:italic; font-size:13px;
+    padding:6px 10px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .card .head .win-btns span{
+    display:inline-block; width:16px; height:14px;
+    background:#fff; color:#8b00a8;
+    text-align:center; line-height:14px;
+    font-size:11px; border-radius:2px; margin-left:3px;
+  }
+  .card .body{ padding:12px; font-size:13px; line-height:1.55; }
+
+  .table-wrap{ overflow:auto; border:1px solid #ffb3e6; border-radius:8px; }
+  table{ width:100%; border-collapse:collapse; min-width:760px; background:rgba(255,255,255,.75); }
+  th, td{ border:1px solid #ffd1ef; padding:8px; vertical-align:top; }
+  th{ background:rgba(255,110,199,.15); color:#8b00a8; font-weight:900; text-transform:lowercase; }
+
+  td .cell-input{
+    width:100%; min-height:56px; resize:vertical;
+    border:1px solid #c724b1; border-radius:8px;
+    padding:8px; font-family:inherit; font-size:13px;
+    color:#4a0e4e; outline:none; background:rgba(255,255,255,.9);
+  }
+  td .cell-input:focus{ box-shadow:0 0 0 2px rgba(199,36,177,.25); }
+
+  .row-time{ width:92px; white-space:nowrap; font-weight:900; color:#8b00a8; background:rgba(255,110,199,.08); }
+
+  .notes-area{
+    width:100%; min-height:160px; resize:vertical;
+    border:2px solid #c724b1; border-radius:10px;
+    padding:10px; font-family:inherit; font-size:13px;
+    color:#4a0e4e; outline:none; background:rgba(255,255,255,.9);
+  }
+  .notes-area:focus{ box-shadow:0 0 0 2px rgba(199,36,177,.25); }
+
+  .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .btn{
+    cursor:pointer; color:#fff; background:rgba(139,0,168,.9);
+    padding:7px 10px; border-radius:8px;
+    border:1px solid #fff;
+    font-size:12px; font-weight:700; font-style:italic;
+    box-shadow:2px 2px 0 #c724b1;
+    text-decoration:none;
+  }
+  .btn.secondary{ background:rgba(199,36,177,.85); }
+  .hint{ font-size:12px; opacity:.85; margin-top:8px; }
+</style>
+</head>
+
+<body>
+  <div class="top-bar">
+    <span style="margin-right:8px;">📅 расписание:</span>
+    <div class="marquee-box">
+      <span>в ячейки можно дописывать своё — всё сохраняется • базовые пары подставятся автоматически при первом запуске</span>
+    </div>
+    <div class="login" id="topBarLogin"></div>
+  </div>
+
+  <div class="nav">
+    <a href="index.html" class="nav-btn">
+      <img src="images/home.png" alt="" onerror="this.style.display='none'">
+      home
+    </a>
+  </div>
+
+  <div class="page">
+    <div class="card">
+      <div class="head">
+        <span>📅 Расписание (таблица)</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div>
+      </div>
+      <div class="body">
+        <div class="table-wrap">
+          <table id="scheduleTable" aria-label="Таблица расписания">
+            <thead>
+              <tr>
+                <th class="row-time">время</th>
+                <th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary" id="resetToDefaultsBtn" type="button">вернуть базовые пары</button>
+          <button class="btn secondary" id="clearScheduleBtn" type="button">очистить таблицу</button>
+          <a class="btn" href="deadlines.html">к дедлайнам →</a>
+        </div>
+
+        <div class="hint">
+          Базовые пары подставляются только если ты ещё ни разу не сохраняла своё расписание. Кнопка «вернуть базовые пары» перезапишет таблицу.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="head">
+        <span>📝 Заметки</span>
+        <div class="win-btns"><span>_</span><span>□</span><span>✕</span></div>
+      </div>
+      <div class="body">
+        <textarea id="notes" class="notes-area" placeholder="Пиши сюда любые заметки — они сохранятся автоматически."></textarea>
+        <div class="actions">
+          <button class="btn secondary" id="clearNotesBtn" type="button">очистить заметки</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  /* ---------- TOP BAR LOGIN ---------- */
+  function doLogout(){
+    localStorage.setItem('isLoggedIn', 'false');
+    updateTopBar();
+  }
+  function updateTopBar(){
+    const loginBlock = document.getElementById('topBarLogin');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if(!loginBlock) return;
+
+    if(isLoggedIn){
+      const name   = localStorage.getItem('userName') || 'профиль';
+      const avatar = localStorage.getItem('profile_avatar') || 'images/profile.png';
+      loginBlock.innerHTML = `
+        <a href="profile.html">
+          <img src="${avatar}" alt="" onerror="this.src='images/profile.png'">
+          <span>${name}</span>
+        </a>
+        <a href="#" onclick="doLogout();return false;">выйти</a>
+      `;
+    } else {
+      loginBlock.innerHTML = `<a href="index.html">← на главную</a>`;
+    }
+  }
+  updateTopBar();
+
+  /* ---------- SCHEDULE ---------- */
+  const STORAGE_KEY_TABLE = 'schedule_table_v1';
+  const STORAGE_KEY_NOTES = 'schedule_notes_v1';
+
+  const days = ['mon','tue','wed','thu','fri','sat','sun'];
+
+  const timeSlots = [
+    '08:00–09:30',
+    '09:40–11:10',
+    '11:20–12:50',
+    '13:20–14:50',
+    '15:00–16:30',
+    '16:40–18:10',
+    '18:20–19:50'
+  ];
+
+  // ===== БАЗОВЫЕ ПАРЫ (ПРИМЕР) =====
+  // Формат: { "индексСлота_день": "текст" }
+  // Индекс слота — по timeSlots (0..6), день — mon..sun
+  const DEFAULT_SCHEDULE = {
+    "0_mon": "Медиадизайн\nауд. 302",
+    "1_mon": "Русский язык\nауд. 214",
+    "2_mon": "Физра\nспортзал",
+
+    "1_tue": "Звук. медиа\nауд. 105",
+    "2_tue": "Английский\nауд. 410",
+
+    "0_wed": "История\nауд. 118",
+    "1_wed": "Проект (ивент)\nауд. 220",
+
+    "2_thu": "Медиадизайн (практика)\nкомп. класс",
+    "3_thu": "Самостоятельная работа\n(допиши задачи)",
+
+    "1_fri": "Кураторский час\nауд. 101",
+    "2_fri": "Проектная работа\n(сайт/подкаст)"
+  };
+
+  function loadTableData(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY_TABLE) || '{}'); }
+    catch(e){ return {}; }
+  }
+
+  function writeWholeTable(obj){
+    localStorage.setItem(STORAGE_KEY_TABLE, JSON.stringify(obj || {}));
+  }
+
+  function ensureDefaultsIfEmpty(){
+    const current = loadTableData();
+    const hasAny = Object.keys(current).some(k => (current[k] || '').trim().length > 0);
+    if(!hasAny){
+      writeWholeTable(DEFAULT_SCHEDULE);
+    }
+  }
+
+  function saveCell(slotIndex, dayKey, value){
+    const data = loadTableData();
+    const cellId = `${slotIndex}_${dayKey}`;
+    data[cellId] = value;
+    writeWholeTable(data);
+  }
+
+  function buildTable(){
+    const tbody = document.getElementById('scheduleBody');
+    const saved = loadTableData();
+    tbody.innerHTML = '';
+
+    timeSlots.forEach((slot, i) => {
+      const tr = document.createElement('tr');
+
+      const tdTime = document.createElement('td');
+      tdTime.className = 'row-time';
+      tdTime.textContent = slot;
+      tr.appendChild(tdTime);
+
+      days.forEach(dayKey => {
+        const td = document.createElement('td');
+
+        const ta = document.createElement('textarea');
+        ta.className = 'cell-input';
+        ta.placeholder = 'дела / пары / задачи…';
+        ta.value = saved[`${i}_${dayKey}`] || '';
+
+        ta.addEventListener('input', () => saveCell(i, dayKey, ta.value));
+
+        td.appendChild(ta);
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function clearSchedule(){
+    if(!confirm('Точно очистить всю таблицу расписания?')) return;
+    localStorage.removeItem(STORAGE_KEY_TABLE);
+    buildTable();
+  }
+
+  function resetToDefaults(){
+    if(!confirm('Вернуть базовые пары? Твоё текущее расписание будет перезаписано.')) return;
+    writeWholeTable(DEFAULT_SCHEDULE);
+    buildTable();
+  }
+
+  document.getElementById('clearScheduleBtn').addEventListener('click', clearSchedule);
+  document.getElementById('resetToDefaultsBtn').addEventListener('click', resetToDefaults);
+
+  /* ---------- NOTES ---------- */
+  const notesEl = document.getElementById('notes');
+
+  function loadNotes(){ notesEl.value = localStorage.getItem(STORAGE_KEY_NOTES) || ''; }
+  function saveNotes(){ localStorage.setItem(STORAGE_KEY_NOTES, notesEl.value); }
+  function clearNotes(){
+    if(!confirm('Точно очистить заметки?')) return;
+    localStorage.removeItem(STORAGE_KEY_NOTES);
+    loadNotes();
+  }
+
+  notesEl.addEventListener('input', saveNotes);
+  document.getElementById('clearNotesBtn').addEventListener('click', clearNotes);
+
+  /* init */
+  ensureDefaultsIfEmpty();   // ← подставляет пары при первом запуске (если таблица пустая)
+  buildTable();
+  loadNotes();
+</script>
+</body>
+</html>

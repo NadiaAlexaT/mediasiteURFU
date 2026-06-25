@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Карта УрФУ</title>
+  <style>
+    html, body {
+      margin:0; padding:0;
+      width:100%; min-height:100vh;
+    }
+    body {
+      font-family: 'Inter',sans-serif;
+      background:
+        #140028
+        url('images/map.jpg')
+        no-repeat
+        top center;
+      background-size: contain; /* видно всю карту, прокручивается по вертикали */
+      min-height: 100vh;
+      color: #fff;
+      position: relative;
+    }
+    .header {
+      width: 100%;
+      background: linear-gradient(90deg,#c724b1,#ff6ec7);
+      color: #fff;
+      font-weight: bold;
+      font-size: 20px;
+      padding: 15px 0 15px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 12px #a07be133;
+      letter-spacing: 1px;
+      opacity: .95;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .header a {
+      color: #fff;
+      background: rgba(255,255,255,.13);
+      border-radius: 10px;
+      padding: 8px 14px;
+      text-decoration: none; border:1px solid #fff;
+      font-size: 15px; font-weight:700;
+      margin-right:24px;
+    }
+    .hint {
+      margin: 22vh 0 0 5vw;
+      padding:18px 24px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.75);
+      color:#4a0e4e;
+      font-size: 19px;
+      font-weight: 900;
+      max-width: 450px;
+      box-shadow: 3px 5px 20px #c724b183;
+      border:2px solid #c724b1;
+    }
+    @media (max-width:650px){
+      .hint {font-size:14px;max-width:95vw;padding:12px}
+      .header{font-size:14px;}
+      .header a{padding:6px 10px;font-size:11px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    🗺 Карта УрФУ
+    <a href="index.html">← на главную</a>
+  </div>
+  
+</body>
+</html>
